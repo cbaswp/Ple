@@ -17,14 +17,11 @@
             background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            min-height: 100vh;
             color: white;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
+            padding: 20px;
         }
         
         @keyframes gradientBG {
@@ -34,7 +31,7 @@
         }
         
         .overlay {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -44,19 +41,24 @@
         }
         
         .container {
-            text-align: center;
+            position: relative;
             z-index: 2;
-            width: 100%;
-            max-width: 800px;
-            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 10px 0;
         }
         
         .logo {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             display: flex;
-            justify-content: center;
             align-items: center;
         }
         
@@ -66,19 +68,43 @@
         
         .logo i {
             margin-right: 15px;
-            font-size: 2.8rem;
-            color: #fff;
+            font-size: 2.2rem;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
         
         .clock {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
+            font-size: 1.1rem;
             opacity: 0.9;
+            text-align: center;
+            margin-bottom: 30px;
         }
         
         .search-box {
             width: 100%;
-            margin: 20px 0;
+            margin: 20px 0 40px;
+            display: flex;
+            justify-content: center;
         }
         
         .search-form {
@@ -87,7 +113,7 @@
             border-radius: 30px;
             overflow: hidden;
             max-width: 600px;
-            margin: 0 auto;
+            width: 100%;
         }
         
         .search-input {
@@ -115,33 +141,24 @@
             background: #3367d6;
         }
         
-        .shortcuts-container {
-            margin-top: 40px;
-        }
-        
-        .shortcuts-title {
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-        }
-        
-        .shortcuts {
+        .shortcuts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
         }
         
         .shortcut {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 15px 10px;
-            transition: transform 0.3s, background 0.3s;
-            cursor: pointer;
+            transition: all 0.3s;
+            cursor: move;
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
         }
         
         .shortcut:hover {
@@ -149,136 +166,233 @@
             background: rgba(255, 255, 255, 0.2);
         }
         
-        .shortcut i {
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-        
-        .shortcut span {
-            font-size: 12px;
-        }
-        
-        .customization-panel {
+        .shortcut-actions {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 3;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
         }
         
-        .settings-btn {
-            background: rgba(255, 255, 255, 0.2);
+        .shortcut-actions button {
+            background: rgba(0, 0, 0, 0.5);
             border: none;
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 25px;
+            height: 25px;
             border-radius: 50%;
             cursor: pointer;
+            font-size: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            transition: all 0.3s;
         }
         
-        .settings-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: rotate(45deg);
+        .shortcut-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .panel-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 50px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            padding: 15px;
-            width: 250px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            color: #333;
-        }
-        
-        .panel-content h3 {
-            margin-bottom: 15px;
+        .shortcut-name {
+            font-size: 12px;
             text-align: center;
+            word-break: break-word;
+            max-width: 100%;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            color: #333;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
             color: #4285f4;
         }
         
-        .panel-content select, .panel-content input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
         }
         
-        .panel-content button {
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn-primary {
             background: #4285f4;
             color: white;
             border: none;
-            border-radius: 4px;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
             transition: background 0.3s;
         }
         
-        .panel-content button:hover {
+        .btn-primary:hover {
             background: #3367d6;
         }
         
+        .btn-secondary {
+            background: #f1f1f1;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .btn-secondary:hover {
+            background: #ddd;
+        }
+        
+        .icon-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        
+        .icon-option {
+            font-size: 24px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .icon-option:hover {
+            background: #f0f0f0;
+        }
+        
+        .icon-option.selected {
+            background: #4285f4;
+            color: white;
+        }
+        
         .credit {
-            position: absolute;
-            bottom: 15px;
-            left: 0;
-            width: 100%;
             text-align: center;
             font-size: 12px;
             opacity: 0.7;
-            z-index: 2;
+            margin-top: 40px;
+            padding: 10px;
         }
         
         @media (max-width: 768px) {
             .logo {
-                font-size: 2.5rem;
+                font-size: 1.8rem;
             }
             
-            .shortcuts {
-                grid-template-columns: repeat(4, 1fr);
+            .shortcuts-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 15px;
             }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .controls {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        /* Estilos para el drag and drop */
+        .shortcut.dragging {
+            opacity: 0.5;
+        }
+        
+        .shortcut-placeholder {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
         }
     </style>
 </head>
 <body>
     <div class="overlay"></div>
     
-    <div class="customization-panel">
-        <button class="settings-btn" id="settingsBtn">
-            <i class="fas fa-cog"></i>
-        </button>
-        <div class="panel-content" id="panelContent">
-            <h3>Personalización</h3>
-            <label>Fondo de pantalla:</label>
-            <select id="bgSelector">
-                <option value="gradient">Degradado de colores</option>
-                <option value="image1">Montañas</option>
-                <option value="image2">Playa</option>
-                <option value="image3">Ciudad</option>
-                <option value="image4">Espacio</option>
-            </select>
-            
-            <label>O usar tu propia imagen (URL):</label>
-            <input type="text" id="customBg" placeholder="https://ejemplo.com/imagen.jpg">
-            
-            <button id="applyBg">Aplicar Fondo</button>
-        </div>
-    </div>
-    
     <div class="container">
-        <div class="logo">
-            <i class="fas fa-home"></i>
-            Mi<span>Chrome</span>
-        </div>
+        <header>
+            <div class="logo">
+                <i class="fas fa-home"></i>
+                Mi<span>Chrome</span>
+            </div>
+            <div class="controls">
+                <button class="btn" id="addShortcutBtn">
+                    <i class="fas fa-plus"></i> Añadir
+                </button>
+                <button class="btn" id="editModeBtn">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="btn" id="settingsBtn">
+                    <i class="fas fa-cog"></i> Configuración
+                </button>
+            </div>
+        </header>
         
         <div class="clock" id="clock">Cargando hora...</div>
         
@@ -291,51 +405,135 @@
             </form>
         </div>
         
-        <div class="shortcuts-container">
-            <h2 class="shortcuts-title">Accesos Directos</h2>
-            <div class="shortcuts">
-                <div class="shortcut" onclick="window.open('https://gmail.com', '_blank')">
-                    <i class="fas fa-envelope"></i>
-                    <span>Gmail</span>
-                </div>
-                <div class="shortcut" onclick="window.open('https://drive.google.com', '_blank')">
-                    <i class="fas fa-cloud"></i>
-                    <span>Drive</span>
-                </div>
-                <div class="shortcut" onclick="window.open('https://calendar.google.com', '_blank')">
-                    <i class="fas fa-calendar"></i>
-                    <span>Calendar</span>
-                </div>
-                <div class="shortcut" onclick="window.open('https://youtube.com', '_blank')">
-                    <i class="fab fa-youtube"></i>
-                    <span>YouTube</span>
-                </div>
-                <div class="shortcut" onclick="window.open('https://maps.google.com', '_blank')">
-                    <i class="fas fa-map"></i>
-                    <span>Maps</span>
-                </div>
-                <div class="shortcut" onclick="window.open('https://translate.google.com', '_blank')">
-                    <i class="fas fa-language"></i>
-                    <span>Translate</span>
-                </div>
-                <div class="shortcut" onclick="window.open('https://github.com', '_blank')">
-                    <i class="fab fa-github"></i>
-                    <span>GitHub</span>
-                </div>
-                <div class="shortcut" onclick="window.open('https://netflix.com', '_blank')">
-                    <i class="fas fa-film"></i>
-                    <span>Netflix</span>
-                </div>
-            </div>
+        <div class="shortcuts-grid" id="shortcutsContainer">
+            <!-- Los accesos directos se generarán aquí con JavaScript -->
+        </div>
+        
+        <div class="credit">
+            Página de inicio personalizada - Los cambios se guardan localmente en tu navegador
         </div>
     </div>
     
-    <div class="credit">
-        Página de inicio personalizada - Creada para Chrome
+    <!-- Modal para añadir/editar accesos directos -->
+    <div class="modal" id="shortcutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Añadir nuevo acceso directo</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="shortcutForm">
+                <input type="hidden" id="shortcutIndex">
+                
+                <div class="form-group">
+                    <label for="shortcutName">Nombre</label>
+                    <input type="text" class="form-control" id="shortcutName" required placeholder="Ej: Gmail">
+                </div>
+                
+                <div class="form-group">
+                    <label for="shortcutUrl">URL</label>
+                    <input type="url" class="form-control" id="shortcutUrl" required placeholder="https://ejemplo.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>Icono</label>
+                    <div class="icon-selector" id="iconSelector">
+                        <div class="icon-option" data-icon="fas fa-envelope">📧</div>
+                        <div class="icon-option" data-icon="fas fa-cloud">☁️</div>
+                        <div class="icon-option" data-icon="fas fa-calendar">📅</div>
+                        <div class="icon-option" data-icon="fab fa-youtube">▶️</div>
+                        <div class="icon-option" data-icon="fas fa-map">🗺️</div>
+                        <div class="icon-option" data-icon="fas fa-language">🔤</div>
+                        <div class="icon-option" data-icon="fab fa-github">💻</div>
+                        <div class="icon-option" data-icon="fas fa-film">🎬</div>
+                        <div class="icon-option" data-icon="fas fa-shopping-cart">🛒</div>
+                        <div class="icon-option" data-icon="fas fa-music">🎵</div>
+                        <div class="icon-option" data-icon="fas fa-book">📚</div>
+                        <div class="icon-option" data-icon="fas fa-gamepad">🎮</div>
+                        <div class="icon-option" data-icon="fas fa-newspaper">📰</div>
+                        <div class="icon-option" data-icon="fas fa-plane">✈️</div>
+                        <div class="icon-option" data-icon="fas fa-weather">🌤️</div>
+                    </div>
+                    <input type="hidden" id="shortcutIcon" value="fas fa-star">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelShortcut">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal de configuración -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Configuración</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="bgSelector">Fondo de pantalla:</label>
+                <select class="form-control" id="bgSelector">
+                    <option value="gradient">Degradado de colores</option>
+                    <option value="image1">Montañas</option>
+                    <option value="image2">Playa</option>
+                    <option value="image3">Ciudad</option>
+                    <option value="image4">Espacio</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="customBg">O usar tu propia imagen (URL):</label>
+                <input type="text" class="form-control" id="customBg" placeholder="https://ejemplo.com/imagen.jpg">
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" id="cancelSettings">Cancelar</button>
+                <button type="button" class="btn-primary" id="applySettings">Aplicar</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Actualizar la hora
+        // Datos iniciales de accesos directos
+        let shortcuts = [
+            { name: "Gmail", url: "https://gmail.com", icon: "fas fa-envelope" },
+            { name: "Drive", url: "https://drive.google.com", icon: "fas fa-cloud" },
+            { name: "Calendar", url: "https://calendar.google.com", icon: "fas fa-calendar" },
+            { name: "YouTube", url: "https://youtube.com", icon: "fab fa-youtube" },
+            { name: "Maps", url: "https://maps.google.com", icon: "fas fa-map" },
+            { name: "Translate", url: "https://translate.google.com", icon: "fas fa-language" },
+            { name: "GitHub", url: "https://github.com", icon: "fab fa-github" },
+            { name: "Netflix", url: "https://netflix.com", icon: "fas fa-film" }
+        ];
+        
+        let editMode = false;
+        let draggedItem = null;
+        
+        // Elementos DOM
+        const shortcutsContainer = document.getElementById('shortcutsContainer');
+        const shortcutModal = document.getElementById('shortcutModal');
+        const settingsModal = document.getElementById('settingsModal');
+        const shortcutForm = document.getElementById('shortcutForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const shortcutIndexInput = document.getElementById('shortcutIndex');
+        const shortcutNameInput = document.getElementById('shortcutName');
+        const shortcutUrlInput = document.getElementById('shortcutUrl');
+        const shortcutIconInput = document.getElementById('shortcutIcon');
+        
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadShortcuts();
+            updateClock();
+            setInterval(updateClock, 1000);
+            loadBackground();
+            
+            // Enfocar la barra de búsqueda al cargar
+            document.querySelector('.search-input').focus();
+        });
+        
+        // Actualizar reloj
         function updateClock() {
             const now = new Date();
             const timeString = now.toLocaleTimeString('es-ES', { 
@@ -354,17 +552,229 @@
                 `${dateString} - ${timeString}`;
         }
         
-        setInterval(updateClock, 1000);
-        updateClock();
+        // Cargar accesos directos desde localStorage
+        function loadShortcuts() {
+            const savedShortcuts = localStorage.getItem('shortcuts');
+            if (savedShortcuts) {
+                shortcuts = JSON.parse(savedShortcuts);
+            }
+            renderShortcuts();
+        }
         
-        // Panel de configuración
-        document.getElementById('settingsBtn').addEventListener('click', function() {
-            const panel = document.getElementById('panelContent');
-            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        // Guardar accesos directos en localStorage
+        function saveShortcuts() {
+            localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
+        }
+        
+        // Renderizar accesos directos
+        function renderShortcuts() {
+            shortcutsContainer.innerHTML = '';
+            
+            shortcuts.forEach((shortcut, index) => {
+                const shortcutElement = document.createElement('div');
+                shortcutElement.className = 'shortcut';
+                shortcutElement.draggable = editMode;
+                shortcutElement.innerHTML = `
+                    ${editMode ? `
+                    <div class="shortcut-actions">
+                        <button class="edit-shortcut" data-index="${index}"><i class="fas fa-edit"></i></button>
+                        <button class="delete-shortcut" data-index="${index}"><i class="fas fa-trash"></i></button>
+                    </div>
+                    ` : ''}
+                    <div class="shortcut-icon">${getIconHTML(shortcut.icon)}</div>
+                    <div class="shortcut-name">${shortcut.name}</div>
+                `;
+                
+                if (!editMode) {
+                    shortcutElement.addEventListener('click', () => {
+                        window.open(shortcut.url, '_blank');
+                    });
+                }
+                
+                // Configurar eventos de drag and drop
+                shortcutElement.addEventListener('dragstart', (e) => {
+                    if (editMode) {
+                        draggedItem = index;
+                        e.dataTransfer.setData('text/plain', index);
+                        setTimeout(() => shortcutElement.classList.add('dragging'), 0);
+                    }
+                });
+                
+                shortcutElement.addEventListener('dragend', () => {
+                    shortcutElement.classList.remove('dragging');
+                    draggedItem = null;
+                });
+                
+                shortcutElement.addEventListener('dragover', (e) => {
+                    if (editMode) e.preventDefault();
+                });
+                
+                shortcutElement.addEventListener('drop', (e) => {
+                    if (editMode) {
+                        e.preventDefault();
+                        const fromIndex = draggedItem;
+                        const toIndex = index;
+                        
+                        if (fromIndex !== toIndex) {
+                            // Reordenar array
+                            const item = shortcuts.splice(fromIndex, 1)[0];
+                            shortcuts.splice(toIndex, 0, item);
+                            
+                            // Guardar y renderizar
+                            saveShortcuts();
+                            renderShortcuts();
+                        }
+                    }
+                });
+                
+                shortcutsContainer.appendChild(shortcutElement);
+            });
+            
+            // Añadir event listeners para botones de edición y eliminación
+            if (editMode) {
+                document.querySelectorAll('.edit-shortcut').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const index = btn.getAttribute('data-index');
+                        editShortcut(index);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-shortcut').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const index = btn.getAttribute('data-index');
+                        deleteShortcut(index);
+                    });
+                });
+            }
+        }
+        
+        // Obtener HTML del icono
+        function getIconHTML(iconClass) {
+            if (iconClass.startsWith('fa-')) {
+                return `<i class="${iconClass}"></i>`;
+            }
+            return iconClass; // Para emojis
+        }
+        
+        // Cambiar modo de edición
+        document.getElementById('editModeBtn').addEventListener('click', function() {
+            editMode = !editMode;
+            this.innerHTML = editMode ? 
+                '<i class="fas fa-check"></i> Guardar' : 
+                '<i class="fas fa-edit"></i> Editar';
+            renderShortcuts();
         });
         
-        // Aplicar fondo personalizado
-        document.getElementById('applyBg').addEventListener('click', function() {
+        // Abrir modal para añadir nuevo acceso directo
+        document.getElementById('addShortcutBtn').addEventListener('click', function() {
+            modalTitle.textContent = 'Añadir nuevo acceso directo';
+            shortcutForm.reset();
+            shortcutIndexInput.value = '';
+            shortcutIconInput.value = 'fas fa-star';
+            shortcutModal.style.display = 'flex';
+        });
+        
+        // Editar acceso directo existente
+        function editShortcut(index) {
+            const shortcut = shortcuts[index];
+            modalTitle.textContent = 'Editar acceso directo';
+            shortcutIndexInput.value = index;
+            shortcutNameInput.value = shortcut.name;
+            shortcutUrlInput.value = shortcut.url;
+            shortcutIconInput.value = shortcut.icon;
+            
+            // Seleccionar el icono actual
+            document.querySelectorAll('.icon-option').forEach(option => {
+                if (option.getAttribute('data-icon') === shortcut.icon) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+            
+            shortcutModal.style.display = 'flex';
+        }
+        
+        // Eliminar acceso directo
+        function deleteShortcut(index) {
+            if (confirm('¿Estás seguro de que quieres eliminar este acceso directo?')) {
+                shortcuts.splice(index, 1);
+                saveShortcuts();
+                renderShortcuts();
+            }
+        }
+        
+        // Seleccionar icono
+        document.querySelectorAll('.icon-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.icon-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                shortcutIconInput.value = this.getAttribute('data-icon');
+            });
+        });
+        
+        // Enviar formulario de acceso directo
+        shortcutForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const index = shortcutIndexInput.value;
+            const shortcut = {
+                name: shortcutNameInput.value,
+                url: shortcutUrlInput.value,
+                icon: shortcutIconInput.value
+            };
+            
+            if (index === '') {
+                // Añadir nuevo
+                shortcuts.push(shortcut);
+            } else {
+                // Editar existente
+                shortcuts[index] = shortcut;
+            }
+            
+            saveShortcuts();
+            renderShortcuts();
+            closeModals();
+        });
+        
+        // Abrir modal de configuración
+        document.getElementById('settingsBtn').addEventListener('click', function() {
+            settingsModal.style.display = 'flex';
+        });
+        
+        // Aplicar configuración
+        document.getElementById('applySettings').addEventListener('click', function() {
+            applyBackground();
+            closeModals();
+        });
+        
+        // Cerrar modales
+        function closeModals() {
+            shortcutModal.style.display = 'none';
+            settingsModal.style.display = 'none';
+        }
+        
+        document.querySelectorAll('.close-modal, #cancelShortcut, #cancelSettings').forEach(btn => {
+            btn.addEventListener('click', closeModals);
+        });
+        
+        // Cargar fondo guardado
+        function loadBackground() {
+            const savedBg = localStorage.getItem('background');
+            if (savedBg) {
+                const bgConfig = JSON.parse(savedBg);
+                document.getElementById('bgSelector').value = bgConfig.type;
+                document.getElementById('customBg').value = bgConfig.customUrl || '';
+                applyBackground();
+            }
+        }
+        
+        // Aplicar fondo
+        function applyBackground() {
             const bgSelector = document.getElementById('bgSelector');
             const customBg = document.getElementById('customBg').value;
             
@@ -408,38 +818,7 @@
                 type: bgSelector.value,
                 customUrl: customBg
             }));
-            
-            // Ocultar panel
-            document.getElementById('panelContent').style.display = 'none';
-        });
-        
-        // Cargar configuración guardada
-        window.addEventListener('load', function() {
-            const savedBg = localStorage.getItem('background');
-            if (savedBg) {
-                const bgConfig = JSON.parse(savedBg);
-                document.getElementById('bgSelector').value = bgConfig.type;
-                document.getElementById('customBg').value = bgConfig.customUrl || '';
-                
-                // Disparar evento para aplicar la configuración
-                document.getElementById('applyBg').click();
-            }
-            
-            // Enfocar la barra de búsqueda al cargar
-            document.querySelector('.search-input').focus();
-        });
-        
-        // Cerrar panel al hacer clic fuera de él
-        document.addEventListener('click', function(event) {
-            const panel = document.getElementById('panelContent');
-            const settingsBtn = document.getElementById('settingsBtn');
-            
-            if (panel.style.display === 'block' && 
-                !panel.contains(event.target) && 
-                !settingsBtn.contains(event.target)) {
-                panel.style.display = 'none';
-            }
-        });
+        }
     </script>
 </body>
 </html>

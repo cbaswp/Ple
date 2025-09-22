@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Página de Inicio Personalizada</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+        
+        .container {
+            text-align: center;
+            z-index: 2;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: #4285f4;
+        }
+        
+        .logo i {
+            margin-right: 15px;
+            font-size: 2.8rem;
+            color: #fff;
+        }
+        
+        .clock {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .search-box {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .search-form {
+            display: flex;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 30px;
+            overflow: hidden;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .search-button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .search-button:hover {
+            background: #3367d6;
+        }
+        
+        .shortcuts-container {
+            margin-top: 40px;
+        }
+        
+        .shortcuts-title {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .shortcuts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .shortcut {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 15px 10px;
+            transition: transform 0.3s, background 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .shortcut:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .shortcut i {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .shortcut span {
+            font-size: 12px;
+        }
+        
+        .customization-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 3;
+        }
+        
+        .settings-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+        
+        .settings-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(45deg);
+        }
+        
+        .panel-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 15px;
+            width: 250px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color: #333;
+        }
+        
+        .panel-content h3 {
+            margin-bottom: 15px;
+            text-align: center;
+            color: #4285f4;
+        }
+        
+        .panel-content select, .panel-content input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .panel-content button {
+            width: 100%;
+            padding: 10px;
+            background: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .panel-content button:hover {
+            background: #3367d6;
+        }
+        
+        .credit {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            opacity: 0.7;
+            z-index: 2;
+        }
+        
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .shortcuts {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    
+    <div class="customization-panel">
+        <button class="settings-btn" id="settingsBtn">
+            <i class="fas fa-cog"></i>
+        </button>
+        <div class="panel-content" id="panelContent">
+            <h3>Personalización</h3>
+            <label>Fondo de pantalla:</label>
+            <select id="bgSelector">
+                <option value="gradient">Degradado de colores</option>
+                <option value="image1">Montañas</option>
+                <option value="image2">Playa</option>
+                <option value="image3">Ciudad</option>
+                <option value="image4">Espacio</option>
+            </select>
+            
+            <label>O usar tu propia imagen (URL):</label>
+            <input type="text" id="customBg" placeholder="https://ejemplo.com/imagen.jpg">
+            
+            <button id="applyBg">Aplicar Fondo</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-home"></i>
+            Mi<span>Chrome</span>
+        </div>
+        
+        <div class="clock" id="clock">Cargando hora...</div>
+        
+        <div class="search-box">
+            <form class="search-form" action="https://www.google.com/search" method="GET" target="_top">
+                <input type="text" name="q" class="search-input" placeholder="Buscar en Google...">
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+        
+        <div class="shortcuts-container">
+            <h2 class="shortcuts-title">Accesos Directos</h2>
+            <div class="shortcuts">
+                <div class="shortcut" onclick="window.open('https://gmail.com', '_blank')">
+                    <i class="fas fa-envelope"></i>
+                    <span>Gmail</span>
+                </div>
+                <div class="shortcut" onclick="window.open('https://drive.google.com', '_blank')">
+                    <i class="fas fa-cloud"></i>
+                    <span>Drive</span>
+                </div>
+                <div class="shortcut" onclick="window.open('https://calendar.google.com', '_blank')">
+                    <i class="fas fa-calendar"></i>
+                    <span>Calendar</span>
+                </div>
+                <div class="shortcut" onclick="window.open('https://youtube.com', '_blank')">
+                    <i class="fab fa-youtube"></i>
+                    <span>YouTube</span>
+                </div>
+                <div class="shortcut" onclick="window.open('https://maps.google.com', '_blank')">
+                    <i class="fas fa-map"></i>
+                    <span>Maps</span>
+                </div>
+                <div class="shortcut" onclick="window.open('https://translate.google.com', '_blank')">
+                    <i class="fas fa-language"></i>
+                    <span>Translate</span>
+                </div>
+                <div class="shortcut" onclick="window.open('https://github.com', '_blank')">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub</span>
+                </div>
+                <div class="shortcut" onclick="window.open('https://netflix.com', '_blank')">
+                    <i class="fas fa-film"></i>
+                    <span>Netflix</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="credit">
+        Página de inicio personalizada - Creada para Chrome
+    </div>
+
+    <script>
+        // Actualizar la hora
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-ES', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+            const dateString = now.toLocaleDateString('es-ES', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            document.getElementById('clock').innerHTML = 
+                `${dateString} - ${timeString}`;
+        }
+        
+        setInterval(updateClock, 1000);
+        updateClock();
+        
+        // Panel de configuración
+        document.getElementById('settingsBtn').addEventListener('click', function() {
+            const panel = document.getElementById('panelContent');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        });
+        
+        // Aplicar fondo personalizado
+        document.getElementById('applyBg').addEventListener('click', function() {
+            const bgSelector = document.getElementById('bgSelector');
+            const customBg = document.getElementById('customBg').value;
+            
+            if (customBg) {
+                document.body.style.backgroundImage = `url('${customBg}')`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                document.body.style.animation = 'none';
+            } else {
+                switch(bgSelector.value) {
+                    case 'gradient':
+                        document.body.style.background = 'linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d)';
+                        document.body.style.backgroundSize = '400% 400%';
+                        document.body.style.animation = 'gradientBG 15s ease infinite';
+                        break;
+                    case 'image1':
+                        document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')";
+                        document.body.style.backgroundSize = 'cover';
+                        document.body.style.animation = 'none';
+                        break;
+                    case 'image2':
+                        document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')";
+                        document.body.style.backgroundSize = 'cover';
+                        document.body.style.animation = 'none';
+                        break;
+                    case 'image3':
+                        document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')";
+                        document.body.style.backgroundSize = 'cover';
+                        document.body.style.animation = 'none';
+                        break;
+                    case 'image4':
+                        document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')";
+                        document.body.style.backgroundSize = 'cover';
+                        document.body.style.animation = 'none';
+                        break;
+                }
+            }
+            
+            // Guardar en localStorage
+            localStorage.setItem('background', JSON.stringify({
+                type: bgSelector.value,
+                customUrl: customBg
+            }));
+            
+            // Ocultar panel
+            document.getElementById('panelContent').style.display = 'none';
+        });
+        
+        // Cargar configuración guardada
+        window.addEventListener('load', function() {
+            const savedBg = localStorage.getItem('background');
+            if (savedBg) {
+                const bgConfig = JSON.parse(savedBg);
+                document.getElementById('bgSelector').value = bgConfig.type;
+                document.getElementById('customBg').value = bgConfig.customUrl || '';
+                
+                // Disparar evento para aplicar la configuración
+                document.getElementById('applyBg').click();
+            }
+            
+            // Enfocar la barra de búsqueda al cargar
+            document.querySelector('.search-input').focus();
+        });
+        
+        // Cerrar panel al hacer clic fuera de él
+        document.addEventListener('click', function(event) {
+            const panel = document.getElementById('panelContent');
+            const settingsBtn = document.getElementById('settingsBtn');
+            
+            if (panel.style.display === 'block' && 
+                !panel.contains(event.target) && 
+                !settingsBtn.contains(event.target)) {
+                panel.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

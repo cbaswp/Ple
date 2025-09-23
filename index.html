@@ -1,222 +1,2222 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MisFavoritos - Página de Inicio</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    /* ====== ESTILOS GENERALES ====== */
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #1a2a6c;
-      color: white;
-    }
-    .overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-      z-index: 1;
-      pointer-events: none;
-    }
-    .container {
-      position: relative;
-      z-index: 2;
-      padding: 20px;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .logo {
-      font-size: 2rem;
-      color: white;
-    }
-    .controls button {
-      margin-left: 10px;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    /* ====== TABS ====== */
-    #tabsList {
-      margin-top: 20px;
-    }
-    .tab {
-      padding: 10px;
-      cursor: pointer;
-      display: inline-block;
-      margin: 5px;
-      background: #333;
-      color: white;
-      border-radius: 5px;
-    }
-    .tab.active { background: #555; }
-    .tab-content {
-      display: none;
-      padding: 20px;
-      background: #f9f9f9;
-      color: black;
-      border-radius: 8px;
-      margin-top: 10px;
-    }
-    .tab-content.active { display: block; }
-    /* ====== SHORTCUTS ====== */
-    .shortcut {
-      display: inline-block;
-      padding: 10px;
-      background: #ddd;
-      margin: 5px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .shortcut:hover { background: #ccc; }
-    /* ====== FOOTER ====== */
-    .credit {
-      margin-top: 30px;
-      font-size: 0.8rem;
-      text-align: center;
-      color: #ccc;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MisFavoritos - Página de Inicio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Agregar SDK de Firebase -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0gxgrmWx7pwffdfyw8bqv0TfmzNK7UME",
+            authDomain: "misfavoritos-402b0.firebaseapp.com",
+            projectId: "misfavoritos-402b0",
+            storageBucket: "misfavoritos-402b0.firebasestorage.app",
+            messagingSenderId: "115400831622",
+            appId: "1:115400831622:web:a63ccaf3d31aba087e5707",
+            measurementId: "G-J680EVJ2E2"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Hacer variables globales para usar en el resto del código
+        window.firebaseApp = app;
+        window.firebaseDB = db;
+        window.firebaseAuth = auth;
+        
+        console.log('Firebase inicializado correctamente');
+    </script>
+    <style>
+        /* Tus estilos CSS existentes se mantienen igual */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+            padding: 20px;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 10px 0;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: #4285f4;
+        }
+        
+        .logo i {
+            margin-right: 15px;
+            font-size: 2.2rem;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .clock {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .search-box {
+            width: 100%;
+            margin: 20px 0 30px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .search-form {
+            display: flex;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 30px;
+            overflow: hidden;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .search-button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .search-button:hover {
+            background: #3367d6;
+        }
+        
+        /* Estilos para las pestañas */
+        .tabs-container {
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .tabs-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px 10px 0 0;
+            overflow-x: auto;
+            padding: 0 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            flex: 1;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            position: relative;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tab.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom: 3px solid #4285f4;
+        }
+        
+        .tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .tab-actions {
+            display: none;
+            gap: 5px;
+            margin-left: 8px;
+        }
+        
+        .edit-mode .tab-actions {
+            display: flex;
+        }
+        
+        .tab-action-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tab-action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .add-tab-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            transition: all 0.3s;
+        }
+        
+        .add-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .tab-content {
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0 0 10px 10px;
+            padding: 20px;
+            min-height: 500px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .empty-tab-message {
+            text-align: center;
+            padding: 60px 20px;
+            opacity: 0.7;
+        }
+        
+        .empty-tab-message i {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 20px;
+        }
+        
+        .shortcut {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px 10px;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .shortcut:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+        
+        .edit-mode .shortcut {
+            cursor: move;
+        }
+        
+        .shortcut-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: none;
+            gap: 5px;
+        }
+        
+        .edit-mode .shortcut-actions {
+            display: flex;
+        }
+        
+        .shortcut-actions button {
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .shortcut-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .shortcut-icon img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 5px;
+        }
+        
+        .shortcut-name {
+            font-size: 12px;
+            text-align: center;
+            word-break: break-word;
+            max-width: 100%;
+        }
+        
+        /* Estilos para diferentes tipos de contenido */
+        .content-item {
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .content-item-header {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .content-item-body {
+            padding: 15px;
+        }
+        
+        .iframe-container {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 8px;
+            background: white;
+        }
+        
+        .text-content {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 200px;
+        }
+        
+        .image-content {
+            text-align: center;
+        }
+        
+        .image-content img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 8px;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .rss-feed {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .rss-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .rss-item:last-child {
+            border-bottom: none;
+        }
+        
+        .rss-item h4 {
+            margin-bottom: 5px;
+        }
+        
+        .rss-item a {
+            color: #4285f4;
+            text-decoration: none;
+        }
+        
+        .rss-item a:hover {
+            text-decoration: underline;
+        }
+        
+        .content-actions {
+            display: none;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .edit-mode .content-actions {
+            display: flex;
+        }
+        
+        .content-type-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .content-type-option {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .content-type-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .content-type-option.selected {
+            background: rgba(66, 133, 244, 0.3);
+            border-color: #4285f4;
+        }
+        
+        .content-type-option i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            width: 90%;
+            max-width: 600px;
+            color: #333;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            color: #4285f4;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+        
+        .close-modal:hover {
+            background: #f0f0f0;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn-primary {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background: #3367d6;
+        }
+        
+        .btn-secondary {
+            background: #f1f1f1;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .btn-secondary:hover {
+            background: #ddd;
+        }
+        
+        .icon-selector {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        
+        .icon-option {
+            font-size: 24px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .icon-option:hover {
+            background: #f0f0f0;
+        }
+        
+        .icon-option.selected {
+            background: #4285f4;
+            color: white;
+        }
+        
+        .icon-option img {
+            max-width: 100%;
+            max-height: 24px;
+        }
+        
+        .custom-icon-upload {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .custom-icon-preview {
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .custom-icon-preview img {
+            max-width: 40px;
+            max-height: 40px;
+            border-radius: 5px;
+        }
+        
+        .auto-icon-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        
+        .auto-icon-option:hover {
+            background: #f0f0f0;
+        }
+        
+        .auto-icon-option.selected {
+            background: #4285f4;
+            color: white;
+        }
+        
+        .credit {
+            text-align: center;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 40px;
+            padding: 10px;
+        }
+
+        /* Nuevos estilos para sincronización */
+        .sync-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+        }
+        
+        .sync-status.syncing {
+            background: rgba(66, 133, 244, 0.8);
+        }
+        
+        .sync-status.error {
+            background: rgba(219, 68, 55, 0.8);
+        }
+        
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .shortcuts-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 15px;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .controls {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .icon-selector {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .tabs-wrapper {
+                flex-direction: column;
+            }
+            
+            .tab {
+                text-align: center;
+            }
+            
+            .iframe-container {
+                height: 300px;
+            }
+            
+            .content-type-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .sync-status {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                text-align: center;
+            }
+        }
+        
+        /* Estilos para el drag and drop */
+        .shortcut.dragging {
+            opacity: 0.5;
+        }
+        
+        .tab.dragging {
+            opacity: 0.5;
+        }
+        
+        .shortcut-placeholder {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+        }
+    </style>
 </head>
 <body>
-
-<div class="overlay"></div>
-
-<div class="container">
-  <header>
-    <div class="logo"><i class="fas fa-book"></i> Mis<span>Favoritos</span></div>
-    <div class="controls">
-      <button id="addShortcutBtn">Añadir Contenido</button>
-      <button id="editModeBtn">Editar</button>
-      <button id="settingsBtn">Configuración</button>
+    <div class="overlay"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-star"></i>
+                Mis<span>Favoritos</span>
+            </div>
+            <div class="controls">
+                <button class="btn" id="addShortcutBtn">
+                    <i class="fas fa-plus"></i> Añadir Contenido
+                </button>
+                <button class="btn" id="editModeBtn">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="btn" id="settingsBtn">
+                    <i class="fas fa-cog"></i> Configuración
+                </button>
+            </div>
+        </header>
+        
+        <div class="clock" id="clock">Cargando hora...</div>
+        
+        <div class="search-box">
+            <form class="search-form" action="https://www.google.com/search" method="GET" target="_top">
+                <input type="text" name="q" class="search-input" placeholder="Buscar en Google...">
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+        
+        <!-- Pestañas -->
+        <div class="tabs-container">
+            <div class="tabs-wrapper">
+                <div class="tabs" id="tabsList">
+                    <!-- Las pestañas se generarán aquí con JavaScript -->
+                </div>
+                <button class="add-tab-btn" id="addTabBtn" title="Añadir nueva pestaña">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            
+            <div id="tabContents">
+                <!-- Los contenidos de las pestañas se generarán aquí con JavaScript -->
+            </div>
+        </div>
+        
+        <div class="credit">
+            Página de inicio personalizada - MisFavoritos - Los cambios se sincronizan en la nube
+        </div>
     </div>
-  </header>
 
-  <div id="tabsList"></div>
-  <div id="tabContents"></div>
+    <!-- Indicador de estado de sincronización -->
+    <div class="sync-status" id="syncStatus" style="display: none;">
+        <i class="fas fa-sync-alt"></i>
+        <span>Sincronizando...</span>
+    </div>
+    
+    <!-- Modal para añadir/editar pestañas -->
+    <div class="modal" id="tabModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="tabModalTitle">Nueva Pestaña</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="tabForm">
+                <input type="hidden" id="tabIndex">
+                
+                <div class="form-group">
+                    <label for="tabName">Nombre de la pestaña</label>
+                    <input type="text" class="form-control" id="tabName" required placeholder="Ej: Recursos Académicos">
+                </div>
+                
+                <div class="form-group">
+                    <label>Icono de la pestaña (opcional)</label>
+                    <div class="icon-selector" id="tabIconSelector">
+                        <div class="icon-option" data-icon="fas fa-home"><i class="fas fa-home"></i></div>
+                        <div class="icon-option" data-icon="fas fa-book"><i class="fas fa-book"></i></div>
+                        <div class="icon-option" data-icon="fas fa-graduation-cap"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="icon-option" data-icon="fas fa-university"><i class="fas fa-university"></i></div>
+                        <div class="icon-option" data-icon="fas fa-laptop"><i class="fas fa-laptop"></i></div>
+                        <div class="icon-option" data-icon="fas fa-star"><i class="fas fa-star"></i></div>
+                        <div class="icon-option" data-icon="fas fa-heart"><i class="fas fa-heart"></i></div>
+                        <div class="icon-option" data-icon="fas fa-globe"><i class="fas fa-globe"></i></div>
+                    </div>
+                    <input type="hidden" id="tabIcon" value="">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelTab">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar Pestaña</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal para añadir contenido a pestañas -->
+    <div class="modal" id="contentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="contentModalTitle">Añadir Contenido</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="contentForm">
+                <input type="hidden" id="contentTabIndex">
+                <input type="hidden" id="contentIndex">
+                <input type="hidden" id="contentType" value="shortcuts">
+                
+                <div class="form-group">
+                    <label>Tipo de contenido</label>
+                    <div class="content-type-selector">
+                        <div class="content-type-option selected" data-type="shortcuts">
+                            <i class="fas fa-th"></i>
+                            <div>Accesos Directos</div>
+                        </div>
+                        <div class="content-type-option" data-type="iframe">
+                            <i class="fas fa-window-maximize"></i>
+                            <div>Página Web</div>
+                        </div>
+                        <div class="content-type-option" data-type="text">
+                            <i class="fas fa-file-alt"></i>
+                            <div>Texto</div>
+                        </div>
+                        <div class="content-type-option" data-type="image">
+                            <i class="fas fa-image"></i>
+                            <div>Imagen</div>
+                        </div>
+                        <div class="content-type-option" data-type="video">
+                            <i class="fas fa-video"></i>
+                            <div>Video</div>
+                        </div>
+                        <div class="content-type-option" data-type="rss">
+                            <i class="fas fa-rss"></i>
+                            <div>Feed RSS</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="contentConfig">
+                    <!-- La configuración específica del contenido se cargará aquí -->
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelContent">Cancelar</button>
+                    <button type="submit" class="btn-primary">Añadir Contenido</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal para añadir/editar accesos directos -->
+    <div class="modal" id="shortcutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Añadir nuevo acceso directo</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="shortcutForm">
+                <input type="hidden" id="shortcutIndex">
+                <input type="hidden" id="shortcutContentIndex">
+                <input type="hidden" id="shortcutTabId">
+                
+                <div class="form-group">
+                    <label for="shortcutName">Nombre</label>
+                    <input type="text" class="form-control" id="shortcutName" required placeholder="Ej: Aula Virtual UPC">
+                </div>
+                
+                <div class="form-group">
+                    <label for="shortcutUrl">URL</label>
+                    <input type="url" class="form-control" id="shortcutUrl" required placeholder="https://ejemplo.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>Selección de icono</label>
+                    
+                    <div class="auto-icon-option" id="autoIconOption">
+                        <i class="fas fa-magic"></i>
+                        <div>
+                            <div>Icono automático desde la URL</div>
+                            <small>Se intentará obtener el favicon del sitio web automáticamente</small>
+                        </div>
+                    </div>
+                    
+                    <div class="icon-selector" id="iconSelector">
+                        <div class="icon-option" data-icon="fas fa-envelope"><i class="fas fa-envelope"></i></div>
+                        <div class="icon-option" data-icon="fas fa-cloud"><i class="fas fa-cloud"></i></div>
+                        <div class="icon-option" data-icon="fab fa-google-drive"><i class="fab fa-google-drive"></i></div>
+                        <div class="icon-option" data-icon="fab fa-youtube"><i class="fab fa-youtube"></i></div>
+                        <div class="icon-option" data-icon="fas fa-language"><i class="fas fa-language"></i></div>
+                        <div class="icon-option" data-icon="fas fa-book"><i class="fas fa-book"></i></div>
+                        <div class="icon-option" data-icon="fas fa-graduation-cap"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="icon-option" data-icon="fas fa-university"><i class="fas fa-university"></i></div>
+                        <div class="icon-option" data-icon="fas fa-laptop"><i class="fas fa-laptop"></i></div>
+                        <div class="icon-option" data-icon="fas fa-file-pdf"><i class="fas fa-file-pdf"></i></div>
+                        <div class="icon-option" data-icon="fas fa-video"><i class="fas fa-video"></i></div>
+                        <div class="icon-option" data-icon="fas fa-music"><i class="fas fa-music"></i></div>
+                        <div class="icon-option" data-icon="fas fa-gamepad"><i class="fas fa-gamepad"></i></div>
+                        <div class="icon-option" data-icon="fas fa-newspaper"><i class="fas fa-newspaper"></i></div>
+                        <div class="icon-option" data-icon="fas fa-plane"><i class="fas fa-plane"></i></div>
+                        <div class="icon-option" data-icon="fas fa-sun"><i class="fas fa-sun"></i></div>
+                        <div class="icon-option" data-icon="fas fa-star"><i class="fas fa-star"></i></div>
+                        <div class="icon-option" data-icon="fas fa-heart"><i class="fas fa-heart"></i></div>
+                        <div class="icon-option" data-icon="fas fa-globe"><i class="fas fa-globe"></i></div>
+                        <div class="icon-option" data-icon="fas fa-home"><i class="fas fa-home"></i></div>
+                        <div class="icon-option" data-icon="fas fa-search"><i class="fas fa-search"></i></div>
+                        <div class="icon-option" data-icon="fas fa-user"><i class="fas fa-user"></i></div>
+                        <div class="icon-option" data-icon="fas fa-cog"><i class="fas fa-cog"></i></div>
+                        <div class="icon-option" data-icon="fas fa-bell"><i class="fas fa-bell"></i></div>
+                        <div class="icon-option" data-icon="fas fa-calendar"><i class="fas fa-calendar"></i></div>
+                    </div>
+                    
+                    <div class="custom-icon-upload">
+                        <label for="customIconUpload">Subir icono personalizado:</label>
+                        <input type="file" id="customIconUpload" accept="image/*" style="margin-top: 5px;">
+                        <div class="custom-icon-preview" id="customIconPreview"></div>
+                    </div>
+                    
+                    <input type="hidden" id="shortcutIcon" value="auto">
+                    <input type="hidden" id="customIconData" value="">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelShortcut">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal de configuración -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Configuración</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="bgSelector">Fondo de pantalla:</label>
+                <select class="form-control" id="bgSelector">
+                    <option value="gradient">Degradado de colores</option>
+                    <option value="image1">Montañas</option>
+                    <option value="image2">Playa</option>
+                    <option value="image3">Ciudad</option>
+                    <option value="image4">Espacio</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="customBg">O usar tu propia imagen (URL):</label>
+                <input type="text" class="form-control" id="customBg" placeholder="https://ejemplo.com/imagen.jpg">
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" id="cancelSettings">Cancelar</button>
+                <button type="button" class="btn-primary" id="applySettings">Aplicar</button>
+            </div>
+        </div>
+    </div>
 
-  <div class="credit">
-    Página de inicio personalizada - MisFavoritos - Cambios guardados en Firebase Firestore
-  </div>
-</div>
-
-<!-- ================== FIREBASE ================== -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-
-  // ⚡ Configuración real de tu proyecto Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyA0gxgrmWx7pwffdfyw8bqv0TfmzNK7UME",
-    authDomain: "misfavoritos-402b0.firebaseapp.com",
-    projectId: "misfavoritos-402b0",
-    storageBucket: "misfavoritos-402b0.firebasestorage.app",
-    messagingSenderId: "115400831622",
-    appId: "1:115400831622:web:a63ccaf3d31aba087e5707",
-    measurementId: "G-J680EVJ2E2"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // ====== VARIABLES ======
-  let tabs = [
-    {
-      id: 1,
-      name: "Accesos Directos",
-      icon: "fas fa-th",
-      active: true,
-      content: [
-        {
-          type: "shortcuts",
-          shortcuts: [
-            { name: "Outlook Office 365", url: "https://outlook.office.com" },
-            { name: "Drive", url: "https://drive.google.com" },
-            { name: "Gmail", url: "https://gmail.com" },
-            { name: "YouTube", url: "https://youtube.com" }
-          ]
+    <script>
+        // Estructura de datos para pestañas y contenido
+        let tabs = [
+            {
+                id: 1,
+                name: "Accesos Directos",
+                icon: "fas fa-th",
+                active: true,
+                content: [
+                    {
+                        type: "shortcuts",
+                        shortcuts: [
+                            { name: "Outlook Office 365", url: "https://outlook.office.com", icon: "auto", customIcon: "" },
+                            { name: "Drive", url: "https://drive.google.com", icon: "auto", customIcon: "" },
+                            { name: "Gmail", url: "https://gmail.com", icon: "auto", customIcon: "" },
+                            { name: "YouTube", url: "https://youtube.com", icon: "auto", customIcon: "" },
+                            { name: "Translate", url: "https://translate.google.com", icon: "auto", customIcon: "" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 2,
+                name: "App Biblioteca",
+                icon: "fas fa-book",
+                active: false,
+                content: [
+                    {
+                        type: "iframe",
+                        url: "https://apps.powerapps.com/play/e/default-ae544a57-aecb-4bf9-828a-5b520732b110/a/0a9a1f09-3c2c-45b8-833c-a11e87265bb0?tenantId=ae544a57-aecb-4bf9-828a-5b520732b110&hint=1c4c6c89-d65f-4019-9427-53d73c309484&sourcetime=1758602663794",
+                        title: "App Biblioteca UPC"
+                    }
+                ]
+            }
+        ];
+        
+        let editMode = false;
+        let draggedItem = null;
+        let editingTabIndex = null;
+        let editingContentIndex = null;
+        let currentTabId = 1;
+        let userId = null;
+        let isOnline = navigator.onLine;
+        
+        // Elementos DOM
+        const tabsList = document.getElementById('tabsList');
+        const tabContents = document.getElementById('tabContents');
+        const tabModal = document.getElementById('tabModal');
+        const contentModal = document.getElementById('contentModal');
+        const shortcutModal = document.getElementById('shortcutModal');
+        const settingsModal = document.getElementById('settingsModal');
+        const syncStatus = document.getElementById('syncStatus');
+        
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            initFirebase();
+            updateClock();
+            setInterval(updateClock, 1000);
+            loadBackground();
+            setupEventListeners();
+            
+            // Enfocar la barra de búsqueda al cargar
+            document.querySelector('.search-input').focus();
+            
+            // Monitorear conexión
+            window.addEventListener('online', handleOnlineStatus);
+            window.addEventListener('offline', handleOnlineStatus);
+        });
+        
+        // Inicializar Firebase y autenticación
+        async function initFirebase() {
+            try {
+                showSyncStatus('Conectando...', 'syncing');
+                
+                // Autenticación anónima
+                const { signInAnonymously, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js');
+                const { getFirestore, doc, setDoc, getDoc, onSnapshot } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js');
+                
+                const auth = window.firebaseAuth;
+                const db = window.firebaseDB;
+                
+                // Autenticar anónimamente
+                const userCredential = await signInAnonymously(auth);
+                userId = userCredential.user.uid;
+                
+                console.log('Usuario autenticado:', userId);
+                
+                // Escuchar cambios en tiempo real
+                const userDocRef = doc(db, 'users', userId);
+                
+                onSnapshot(userDocRef, (doc) => {
+                    if (doc.exists()) {
+                        const userData = doc.data();
+                        if (userData.tabs) {
+                            tabs = userData.tabs;
+                            renderTabs();
+                            showSyncStatus('Sincronizado', 'success');
+                            setTimeout(() => hideSyncStatus(), 2000);
+                        }
+                    } else {
+                        // Primer uso - guardar datos iniciales
+                        saveTabsToFirebase();
+                    }
+                });
+                
+                // Cargar datos existentes
+                const docSnap = await getDoc(userDocRef);
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    if (userData.tabs) {
+                        tabs = userData.tabs;
+                        renderTabs();
+                        showSyncStatus('Datos cargados', 'success');
+                    }
+                } else {
+                    // No hay datos aún, guardar los datos iniciales
+                    await saveTabsToFirebase();
+                }
+                
+            } catch (error) {
+                console.error('Error inicializando Firebase:', error);
+                showSyncStatus('Error de conexión', 'error');
+                // Cargar desde localStorage como fallback
+                loadTabsFromLocalStorage();
+            }
         }
-      ]
-    }
-  ];
-
-  // ====== FIRESTORE ======
-  async function saveTabs() {
-    try {
-      await setDoc(doc(db, "users", "default"), { tabs });
-      console.log("✅ Tabs guardadas en Firestore");
-    } catch (err) {
-      console.error("❌ Error al guardar en Firestore:", err);
-    }
-  }
-
-  async function loadTabs() {
-    try {
-      const docSnap = await getDoc(doc(db, "users", "default"));
-      if (docSnap.exists()) {
-        tabs = docSnap.data().tabs;
-        console.log("📥 Tabs cargadas desde Firestore");
-      } else {
-        console.log("⚠️ No hay datos en Firestore, usando valores por defecto");
-      }
-    } catch (err) {
-      console.error("❌ Error al cargar desde Firestore:", err);
-    }
-    renderTabs();
-  }
-
-  // ====== RENDER ======
-  function renderTabs() {
-    const tabsList = document.getElementById("tabsList");
-    const tabContents = document.getElementById("tabContents");
-    tabsList.innerHTML = "";
-    tabContents.innerHTML = "";
-
-    tabs.forEach(tab => {
-      const tabBtn = document.createElement("div");
-      tabBtn.className = "tab" + (tab.active ? " active" : "");
-      tabBtn.textContent = tab.name;
-      tabBtn.addEventListener("click", () => switchTab(tab.id));
-      tabsList.appendChild(tabBtn);
-
-      const contentDiv = document.createElement("div");
-      contentDiv.className = "tab-content" + (tab.active ? " active" : "");
-      contentDiv.id = "tab-" + tab.id;
-
-      tab.content.forEach(item => {
-        if (item.type === "shortcuts") {
-          const shortcutsDiv = document.createElement("div");
-          item.shortcuts.forEach(s => {
-            const shortcut = document.createElement("div");
-            shortcut.className = "shortcut";
-            shortcut.textContent = s.name;
-            shortcut.addEventListener("click", () => window.open(s.url, "_blank"));
-            shortcutsDiv.appendChild(shortcut);
-          });
-          contentDiv.appendChild(shortcutsDiv);
+        
+        // Guardar pestañas en Firebase
+        async function saveTabsToFirebase() {
+            if (!userId || !window.firebaseDB) {
+                saveTabsToLocalStorage();
+                return;
+            }
+            
+            try {
+                showSyncStatus('Guardando...', 'syncing');
+                
+                const { doc, setDoc } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js');
+                const userDocRef = doc(window.firebaseDB, 'users', userId);
+                
+                await setDoc(userDocRef, {
+                    tabs: tabs,
+                    lastUpdated: new Date().toISOString()
+                });
+                
+                showSyncStatus('Guardado en la nube', 'success');
+                setTimeout(() => hideSyncStatus(), 2000);
+                
+            } catch (error) {
+                console.error('Error guardando en Firebase:', error);
+                showSyncStatus('Error guardando', 'error');
+                // Fallback a localStorage
+                saveTabsToLocalStorage();
+            }
         }
-      });
-
-      tabContents.appendChild(contentDiv);
-    });
-  }
-
-  function switchTab(tabId) {
-    tabs.forEach(t => t.active = (t.id === tabId));
-    saveTabs();
-    renderTabs();
-  }
-
-  // ====== INIT ======
-  document.addEventListener("DOMContentLoaded", () => {
-    loadTabs();
-  });
-</script>
+        
+        // Guardar en localStorage (fallback)
+        function saveTabsToLocalStorage() {
+            localStorage.setItem('tabs', JSON.stringify(tabs));
+            showSyncStatus('Guardado localmente', 'success');
+            setTimeout(() => hideSyncStatus(), 2000);
+        }
+        
+        // Cargar desde localStorage (fallback)
+        function loadTabsFromLocalStorage() {
+            const savedTabs = localStorage.getItem('tabs');
+            if (savedTabs) {
+                tabs = JSON.parse(savedTabs);
+                renderTabs();
+                showSyncStatus('Datos cargados localmente', 'success');
+                setTimeout(() => hideSyncStatus(), 2000);
+            }
+        }
+        
+        // Mostrar estado de sincronización
+        function showSyncStatus(message, type = 'syncing') {
+            syncStatus.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation-triangle' : 'sync-alt'}"></i> <span>${message}</span>`;
+            syncStatus.className = `sync-status ${type}`;
+            syncStatus.style.display = 'flex';
+        }
+        
+        function hideSyncStatus() {
+            syncStatus.style.display = 'none';
+        }
+        
+        // Manejar cambios de conexión
+        function handleOnlineStatus() {
+            isOnline = navigator.onLine;
+            if (isOnline) {
+                showSyncStatus('Conectado - Sincronizando...', 'syncing');
+                // Intentar sincronizar cuando se recupera la conexión
+                setTimeout(() => saveTabsToFirebase(), 1000);
+            } else {
+                showSyncStatus('Sin conexión - Modo local', 'error');
+            }
+        }
+        
+        // Configurar event listeners
+        function setupEventListeners() {
+            // Botón para añadir pestaña
+            document.getElementById('addTabBtn').addEventListener('click', function() {
+                openTabModal();
+            });
+            
+            // Botón para añadir contenido
+            document.getElementById('addShortcutBtn').addEventListener('click', function() {
+                openContentModal();
+            });
+            
+            // Botón para modo edición
+            document.getElementById('editModeBtn').addEventListener('click', function() {
+                toggleEditMode();
+            });
+            
+            // Botón de configuración
+            document.getElementById('settingsBtn').addEventListener('click', function() {
+                settingsModal.style.display = 'flex';
+            });
+            
+            // Selector de tipo de contenido
+            document.querySelectorAll('.content-type-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.content-type-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    const contentType = this.getAttribute('data-type');
+                    document.getElementById('contentType').value = contentType;
+                    loadContentConfig(contentType);
+                });
+            });
+            
+            // Formulario de pestaña
+            document.getElementById('tabForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveTab();
+            });
+            
+            // Formulario de contenido
+            document.getElementById('contentForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveContent();
+            });
+            
+            // Formulario de acceso directo
+            document.getElementById('shortcutForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveShortcut();
+            });
+            
+            // Configuración
+            document.getElementById('applySettings').addEventListener('click', function() {
+                applyBackground();
+                closeModals();
+            });
+            
+            // Botones de cancelar
+            document.getElementById('cancelTab').addEventListener('click', closeModals);
+            document.getElementById('cancelContent').addEventListener('click', closeModals);
+            document.getElementById('cancelShortcut').addEventListener('click', closeModals);
+            document.getElementById('cancelSettings').addEventListener('click', closeModals);
+            
+            // Botones de cerrar (X) en todos los modales
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', closeModals);
+            });
+            
+            // Cerrar modales al hacer clic fuera
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeModals();
+                    }
+                });
+            });
+            
+            // Selector de iconos para pestañas
+            document.querySelectorAll('#tabIconSelector .icon-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('#tabIconSelector .icon-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    document.getElementById('tabIcon').value = this.getAttribute('data-icon');
+                });
+            });
+            
+            // Selector de iconos para accesos directos
+            document.querySelectorAll('#iconSelector .icon-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('#iconSelector .icon-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    document.getElementById('shortcutIcon').value = this.getAttribute('data-icon');
+                    document.getElementById('autoIconOption').classList.remove('selected');
+                });
+            });
+            
+            // Opción de icono automático
+            document.getElementById('autoIconOption').addEventListener('click', function() {
+                this.classList.add('selected');
+                document.querySelectorAll('#iconSelector .icon-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                document.getElementById('shortcutIcon').value = 'auto';
+            });
+            
+            // Cargar configuración inicial de contenido
+            loadContentConfig('shortcuts');
+        }
+        
+        // El resto de las funciones se mantienen igual (renderTabs, switchTab, etc.)
+        // Solo cambian las funciones de guardado para usar Firebase
+        
+        // Cambiar entre pestañas
+        function switchTab(tabId) {
+            tabs.forEach(tab => {
+                tab.active = tab.id === tabId;
+            });
+            currentTabId = tabId;
+            saveTabsToFirebase();
+            renderTabs();
+        }
+        
+        // Alternar modo edición
+        function toggleEditMode() {
+            editMode = !editMode;
+            document.getElementById('editModeBtn').innerHTML = editMode ? 
+                '<i class="fas fa-check"></i> Guardar' : 
+                '<i class="fas fa-edit"></i> Editar';
+            renderTabs();
+        }
+        
+        // Abrir modal de pestaña
+        function openTabModal(index = null) {
+            const modal = document.getElementById('tabModal');
+            const title = document.getElementById('tabModalTitle');
+            const form = document.getElementById('tabForm');
+            
+            if (index !== null) {
+                // Editar pestaña existente
+                title.textContent = 'Editar Pestaña';
+                editingTabIndex = index;
+                
+                const tab = tabs[index];
+                document.getElementById('tabIndex').value = index;
+                document.getElementById('tabName').value = tab.name;
+                document.getElementById('tabIcon').value = tab.icon || '';
+                
+                // Seleccionar icono si existe
+                if (tab.icon) {
+                    document.querySelectorAll('#tabIconSelector .icon-option').forEach(option => {
+                        if (option.getAttribute('data-icon') === tab.icon) {
+                            option.classList.add('selected');
+                        } else {
+                            option.classList.remove('selected');
+                        }
+                    });
+                }
+            } else {
+                // Nueva pestaña
+                title.textContent = 'Nueva Pestaña';
+                editingTabIndex = null;
+                form.reset();
+                document.getElementById('tabIcon').value = '';
+                
+                // Deseleccionar iconos
+                document.querySelectorAll('#tabIconSelector .icon-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+            }
+            
+            modal.style.display = 'flex';
+        }
+        
+        // Guardar pestaña
+        function saveTab() {
+            const name = document.getElementById('tabName').value;
+            const icon = document.getElementById('tabIcon').value;
+            const index = document.getElementById('tabIndex').value;
+            
+            if (index) {
+                // Editar pestaña existente
+                tabs[index].name = name;
+                tabs[index].icon = icon;
+            } else {
+                // Nueva pestaña
+                const newTab = {
+                    id: Date.now(),
+                    name: name,
+                    icon: icon,
+                    active: false,
+                    content: []
+                };
+                tabs.push(newTab);
+            }
+            
+            saveTabsToFirebase();
+            renderTabs();
+            closeModals();
+        }
+        
+        // Abrir modal de contenido
+        function openContentModal(contentIndex = null) {
+            const modal = document.getElementById('contentModal');
+            const title = document.getElementById('contentModalTitle');
+            
+            if (contentIndex !== null) {
+                // Editar contenido existente
+                title.textContent = 'Editar Contenido';
+                editingContentIndex = contentIndex;
+                
+                const currentTab = tabs.find(tab => tab.id === currentTabId);
+                const content = currentTab.content[contentIndex];
+                
+                document.getElementById('contentIndex').value = contentIndex;
+                document.getElementById('contentType').value = content.type;
+                
+                // Seleccionar tipo de contenido
+                document.querySelectorAll('.content-type-option').forEach(option => {
+                    if (option.getAttribute('data-type') === content.type) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+                
+                loadContentConfig(content.type, content);
+            } else {
+                // Nuevo contenido
+                title.textContent = 'Añadir Contenido';
+                editingContentIndex = null;
+                document.getElementById('contentType').value = 'shortcuts';
+                document.getElementById('contentTabIndex').value = currentTabId;
+                
+                // Seleccionar accesos directos por defecto
+                document.querySelectorAll('.content-type-option').forEach(option => {
+                    if (option.getAttribute('data-type') === 'shortcuts') {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+                
+                loadContentConfig('shortcuts');
+            }
+            
+            modal.style.display = 'flex';
+        }
+        
+        // Guardar contenido
+        function saveContent() {
+            const type = document.getElementById('contentType').value;
+            const tabId = parseInt(document.getElementById('contentTabIndex').value);
+            const contentIndex = document.getElementById('contentIndex').value;
+            
+            const currentTab = tabs.find(tab => tab.id === tabId);
+            if (!currentTab) return;
+            
+            let contentData = { type: type };
+            
+            switch (type) {
+                case 'shortcuts':
+                    contentData.title = document.getElementById('contentTitle').value || 'Accesos Directos';
+                    contentData.shortcuts = [];
+                    break;
+                case 'iframe':
+                    contentData.title = document.getElementById('iframeTitle').value;
+                    contentData.url = document.getElementById('iframeUrl').value;
+                    break;
+                case 'text':
+                    contentData.title = document.getElementById('textTitle').value;
+                    contentData.text = document.getElementById('textContent').value;
+                    break;
+                case 'image':
+                    contentData.title = document.getElementById('imageTitle').value;
+                    contentData.url = document.getElementById('imageUrl').value;
+                    contentData.caption = document.getElementById('imageCaption').value;
+                    break;
+                case 'video':
+                    contentData.title = document.getElementById('videoTitle').value;
+                    contentData.url = document.getElementById('videoUrl').value;
+                    break;
+                case 'rss':
+                    contentData.title = document.getElementById('rssTitle').value;
+                    contentData.url = document.getElementById('rssUrl').value;
+                    contentData.limit = parseInt(document.getElementById('rssLimit').value) || 5;
+                    break;
+            }
+            
+            if (contentIndex) {
+                // Editar contenido existente
+                currentTab.content[contentIndex] = contentData;
+            } else {
+                // Nuevo contenido
+                currentTab.content.push(contentData);
+            }
+            
+            saveTabsToFirebase();
+            renderTabs();
+            closeModals();
+        }
+        
+        // Abrir modal de acceso directo
+        function openShortcutModal(shortcutIndex = null, contentIndex, tabId) {
+            const modal = document.getElementById('shortcutModal');
+            const title = document.getElementById('modalTitle');
+            
+            if (shortcutIndex !== null) {
+                // Editar acceso directo existente
+                title.textContent = 'Editar acceso directo';
+                
+                const currentTab = tabs.find(tab => tab.id === tabId);
+                const shortcut = currentTab.content[contentIndex].shortcuts[shortcutIndex];
+                
+                document.getElementById('shortcutIndex').value = shortcutIndex;
+                document.getElementById('shortcutName').value = shortcut.name;
+                document.getElementById('shortcutUrl').value = shortcut.url;
+                document.getElementById('shortcutIcon').value = shortcut.icon;
+                document.getElementById('customIconData').value = shortcut.customIcon || '';
+                document.getElementById('shortcutContentIndex').value = contentIndex;
+                document.getElementById('shortcutTabId').value = tabId;
+                
+                // Configurar selección de icono
+                if (shortcut.icon === 'auto') {
+                    document.getElementById('autoIconOption').classList.add('selected');
+                    document.querySelectorAll('#iconSelector .icon-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                } else {
+                    document.getElementById('autoIconOption').classList.remove('selected');
+                    document.querySelectorAll('#iconSelector .icon-option').forEach(option => {
+                        if (option.getAttribute('data-icon') === shortcut.icon) {
+                            option.classList.add('selected');
+                        } else {
+                            option.classList.remove('selected');
+                        }
+                    });
+                }
+            } else {
+                // Nuevo acceso directo
+                title.textContent = 'Añadir nuevo acceso directo';
+                document.getElementById('shortcutForm').reset();
+                document.getElementById('shortcutIndex').value = '';
+                document.getElementById('shortcutIcon').value = 'auto';
+                document.getElementById('customIconData').value = '';
+                document.getElementById('shortcutContentIndex').value = contentIndex;
+                document.getElementById('shortcutTabId').value = tabId;
+                
+                // Seleccionar automáticamente la opción de icono automático
+                document.getElementById('autoIconOption').classList.add('selected');
+                document.querySelectorAll('#iconSelector .icon-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+            }
+            
+            modal.style.display = 'flex';
+        }
+        
+        // Guardar acceso directo
+        function saveShortcut() {
+            const name = document.getElementById('shortcutName').value;
+            const url = document.getElementById('shortcutUrl').value;
+            const icon = document.getElementById('shortcutIcon').value;
+            const customIcon = document.getElementById('customIconData').value;
+            const shortcutIndex = document.getElementById('shortcutIndex').value;
+            const contentIndex = document.getElementById('shortcutContentIndex').value;
+            const tabId = parseInt(document.getElementById('shortcutTabId').value);
+            
+            const currentTab = tabs.find(tab => tab.id === tabId);
+            if (!currentTab || !currentTab.content[contentIndex]) return;
+            
+            const shortcutData = {
+                name: name,
+                url: url,
+                icon: icon,
+                customIcon: customIcon
+            };
+            
+            if (shortcutIndex) {
+                // Editar acceso directo existente
+                currentTab.content[contentIndex].shortcuts[shortcutIndex] = shortcutData;
+            } else {
+                // Nuevo acceso directo
+                if (!currentTab.content[contentIndex].shortcuts) {
+                    currentTab.content[contentIndex].shortcuts = [];
+                }
+                currentTab.content[contentIndex].shortcuts.push(shortcutData);
+            }
+            
+            saveTabsToFirebase();
+            renderTabs();
+            closeModals();
+        }
+        
+        // Eliminar pestaña
+        function deleteTab(index) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta pestaña? Se perderá todo su contenido.')) {
+                tabs.splice(index, 1);
+                
+                // Asegurar que al menos una pestaña esté activa
+                if (tabs.length > 0 && !tabs.some(tab => tab.active)) {
+                    tabs[0].active = true;
+                    currentTabId = tabs[0].id;
+                }
+                
+                saveTabsToFirebase();
+                renderTabs();
+            }
+        }
+        
+        // Eliminar contenido
+        function deleteContent(contentIndex, tabId) {
+            if (confirm('¿Estás seguro de que quieres eliminar este contenido?')) {
+                const currentTab = tabs.find(tab => tab.id === tabId);
+                if (currentTab) {
+                    currentTab.content.splice(contentIndex, 1);
+                    saveTabsToFirebase();
+                    renderTabs();
+                }
+            }
+        }
+        
+        // Eliminar acceso directo
+        function deleteShortcut(shortcutIndex, contentIndex, tabId) {
+            if (confirm('¿Estás seguro de que quieres eliminar este acceso directo?')) {
+                const currentTab = tabs.find(tab => tab.id === tabId);
+                if (currentTab && currentTab.content[contentIndex]) {
+                    currentTab.content[contentIndex].shortcuts.splice(shortcutIndex, 1);
+                    saveTabsToFirebase();
+                    renderTabs();
+                }
+            }
+        }
+        
+        // Cargar configuración de contenido según el tipo
+        function loadContentConfig(type, existingData = null) {
+            const configContainer = document.getElementById('contentConfig');
+            let configHTML = '';
+            
+            switch (type) {
+                case 'shortcuts':
+                    configHTML = `
+                        <div class="form-group">
+                            <label for="contentTitle">Título de la sección (opcional)</label>
+                            <input type="text" class="form-control" id="contentTitle" placeholder="Ej: Mis Enlaces Favoritos" value="${existingData ? existingData.title || '' : ''}">
+                        </div>
+                        <p>Podrás añadir accesos directos después de crear esta sección.</p>
+                    `;
+                    break;
+                    
+                case 'iframe':
+                    configHTML = `
+                        <div class="form-group">
+                            <label for="iframeTitle">Título</label>
+                            <input type="text" class="form-control" id="iframeTitle" required value="${existingData ? existingData.title || '' : ''}" placeholder="Ej: App Biblioteca">
+                        </div>
+                        <div class="form-group">
+                            <label for="iframeUrl">URL</label>
+                            <input type="url" class="form-control" id="iframeUrl" required value="${existingData ? existingData.url || '' : ''}" placeholder="https://ejemplo.com">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'text':
+                    configHTML = `
+                        <div class="form-group">
+                            <label for="textTitle">Título</label>
+                            <input type="text" class="form-control" id="textTitle" required value="${existingData ? existingData.title || '' : ''}" placeholder="Ej: Notas Importantes">
+                        </div>
+                        <div class="form-group">
+                            <label for="textContent">Contenido</label>
+                            <textarea class="form-control" id="textContent" rows="6" placeholder="Escribe tu texto aquí...">${existingData ? existingData.text || '' : ''}</textarea>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'image':
+                    configHTML = `
+                        <div class="form-group">
+                            <label for="imageTitle">Título</label>
+                            <input type="text" class="form-control" id="imageTitle" value="${existingData ? existingData.title || '' : ''}" placeholder="Ej: Imagen Inspiradora">
+                        </div>
+                        <div class="form-group">
+                            <label for="imageUrl">URL de la imagen</label>
+                            <input type="url" class="form-control" id="imageUrl" required value="${existingData ? existingData.url || '' : ''}" placeholder="https://ejemplo.com/imagen.jpg">
+                        </div>
+                        <div class="form-group">
+                            <label for="imageCaption">Leyenda (opcional)</label>
+                            <input type="text" class="form-control" id="imageCaption" value="${existingData ? existingData.caption || '' : ''}" placeholder="Descripción de la imagen">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'video':
+                    configHTML = `
+                        <div class="form-group">
+                            <label for="videoTitle">Título</label>
+                            <input type="text" class="form-control" id="videoTitle" required value="${existingData ? existingData.title || '' : ''}" placeholder="Ej: Tutorial de Uso">
+                        </div>
+                        <div class="form-group">
+                            <label for="videoUrl">URL del video (YouTube, Vimeo, etc.)</label>
+                            <input type="url" class="form-control" id="videoUrl" required value="${existingData ? existingData.url || '' : ''}" placeholder="https://youtube.com/embed/VIDEO_ID">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'rss':
+                    configHTML = `
+                        <div class="form-group">
+                            <label for="rssTitle">Título</label>
+                            <input type="text" class="form-control" id="rssTitle" required value="${existingData ? existingData.title || '' : ''}" placeholder="Ej: Noticias UPC">
+                        </div>
+                        <div class="form-group">
+                            <label for="rssUrl">URL del Feed RSS</label>
+                            <input type="url" class="form-control" id="rssUrl" required value="${existingData ? existingData.url || '' : ''}" placeholder="https://ejemplo.com/feed">
+                        </div>
+                        <div class="form-group">
+                            <label for="rssLimit">Número de elementos a mostrar</label>
+                            <input type="number" class="form-control" id="rssLimit" min="1" max="20" value="${existingData ? existingData.limit || 5 : 5}">
+                        </div>
+                    `;
+                    break;
+            }
+            
+            configContainer.innerHTML = configHTML;
+        }
+        
+        // Renderizar pestañas (función completa se mantiene igual)
+        function renderTabs() {
+            tabsList.innerHTML = '';
+            tabContents.innerHTML = '';
+            
+            // Aplicar clase de modo edición al cuerpo
+            if (editMode) {
+                document.body.classList.add('edit-mode');
+            } else {
+                document.body.classList.remove('edit-mode');
+            }
+            
+            tabs.forEach((tab, index) => {
+                // Crear elemento de pestaña
+                const tabElement = document.createElement('div');
+                tabElement.className = `tab ${tab.active ? 'active' : ''}`;
+                tabElement.setAttribute('data-tab-id', tab.id);
+                tabElement.setAttribute('draggable', editMode);
+                
+                let iconHTML = tab.icon ? `<i class="${tab.icon}"></i>` : '';
+                tabElement.innerHTML = `
+                    ${iconHTML}
+                    <span>${tab.name}</span>
+                    <div class="tab-actions">
+                        <button class="tab-action-btn edit-tab" title="Editar pestaña"><i class="fas fa-edit"></i></button>
+                        <button class="tab-action-btn delete-tab" title="Eliminar pestaña"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                
+                tabElement.addEventListener('click', (e) => {
+                    if (!editMode && !e.target.closest('.tab-action-btn')) {
+                        switchTab(tab.id);
+                    }
+                });
+                
+                // Configurar drag and drop para pestañas en modo edición
+                if (editMode) {
+                    tabElement.addEventListener('dragstart', (e) => {
+                        draggedItem = index;
+                        e.dataTransfer.setData('text/plain', index);
+                        setTimeout(() => tabElement.classList.add('dragging'), 0);
+                    });
+                    
+                    tabElement.addEventListener('dragend', () => {
+                        tabElement.classList.remove('dragging');
+                        draggedItem = null;
+                    });
+                    
+                    tabElement.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                    });
+                    
+                    tabElement.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        const fromIndex = draggedItem;
+                        const toIndex = index;
+                        
+                        if (fromIndex !== toIndex) {
+                            // Reordenar array
+                            const item = tabs.splice(fromIndex, 1)[0];
+                            tabs.splice(toIndex, 0, item);
+                            
+                            // Guardar y renderizar
+                            saveTabsToFirebase();
+                            renderTabs();
+                        }
+                    });
+                }
+                
+                // Añadir event listeners para acciones de pestaña
+                const editBtn = tabElement.querySelector('.edit-tab');
+                const deleteBtn = tabElement.querySelector('.delete-tab');
+                
+                editBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openTabModal(index);
+                });
+                
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (tabs.length > 1) {
+                        deleteTab(index);
+                    } else {
+                        alert('Debe haber al menos una pestaña');
+                    }
+                });
+                
+                tabsList.appendChild(tabElement);
+                
+                // Crear contenido de pestaña
+                const tabContent = document.createElement('div');
+                tabContent.className = `tab-content ${tab.active ? 'active' : ''}`;
+                tabContent.id = `tab-${tab.id}`;
+                
+                if (tab.content && tab.content.length > 0) {
+                    renderTabContent(tabContent, tab.content, tab.id);
+                } else {
+                    tabContent.innerHTML = `
+                        <div class="empty-tab-message">
+                            <i class="fas fa-plus-circle"></i>
+                            <h3>Esta pestaña está vacía</h3>
+                            <p>Haz clic en "Añadir Contenido" para agregar contenido a esta pestaña</p>
+                        </div>
+                    `;
+                }
+                
+                tabContents.appendChild(tabContent);
+            });
+        }
+        
+        // Renderizar contenido de pestaña (función completa se mantiene igual)
+        function renderTabContent(container, content, tabId) {
+            container.innerHTML = '';
+            
+            content.forEach((item, index) => {
+                const contentItem = document.createElement('div');
+                contentItem.className = 'content-item';
+                
+                let contentHTML = '';
+                
+                switch (item.type) {
+                    case 'shortcuts':
+                        contentHTML = renderShortcutsContent(item, index, tabId);
+                        break;
+                    case 'iframe':
+                        contentHTML = renderIframeContent(item, index, tabId);
+                        break;
+                    case 'text':
+                        contentHTML = renderTextContent(item, index, tabId);
+                        break;
+                    case 'image':
+                        contentHTML = renderImageContent(item, index, tabId);
+                        break;
+                    case 'video':
+                        contentHTML = renderVideoContent(item, index, tabId);
+                        break;
+                    case 'rss':
+                        contentHTML = renderRSSContent(item, index, tabId);
+                        break;
+                }
+                
+                contentItem.innerHTML = contentHTML;
+                container.appendChild(contentItem);
+                
+                // Añadir event listeners para los botones de contenido
+                if (editMode) {
+                    const editBtn = contentItem.querySelector('.edit-content-btn');
+                    const deleteBtn = contentItem.querySelector('.delete-content-btn');
+                    const addShortcutBtn = contentItem.querySelector('.add-shortcut-btn');
+                    
+                    if (editBtn) {
+                        editBtn.addEventListener('click', () => {
+                            openContentModal(index);
+                        });
+                    }
+                    
+                    if (deleteBtn) {
+                        deleteBtn.addEventListener('click', () => {
+                            deleteContent(index, tabId);
+                        });
+                    }
+                    
+                    if (addShortcutBtn) {
+                        addShortcutBtn.addEventListener('click', () => {
+                            openShortcutModal(null, index, tabId);
+                        });
+                    }
+                    
+                    // Añadir event listeners para los accesos directos
+                    if (item.type === 'shortcuts') {
+                        contentItem.querySelectorAll('.edit-shortcut').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                const shortcutIndex = btn.getAttribute('data-index');
+                                openShortcutModal(shortcutIndex, index, tabId);
+                            });
+                        });
+                        
+                        contentItem.querySelectorAll('.delete-shortcut').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                const shortcutIndex = btn.getAttribute('data-index');
+                                deleteShortcut(shortcutIndex, index, tabId);
+                            });
+                        });
+                    }
+                }
+                
+                // Añadir event listeners para interactividad cuando NO estamos en modo edición
+                if (!editMode) {
+                    if (item.type === 'shortcuts') {
+                        // Añadir event listeners para los accesos directos
+                        contentItem.querySelectorAll('.shortcut').forEach(shortcut => {
+                            shortcut.addEventListener('click', (e) => {
+                                if (!e.target.closest('.shortcut-actions')) {
+                                    const shortcutIndex = shortcut.getAttribute('data-shortcut-index');
+                                    const shortcutData = item.shortcuts[shortcutIndex];
+                                    if (shortcutData && shortcutData.url) {
+                                        window.open(shortcutData.url, '_blank');
+                                    }
+                                }
+                            });
+                        });
+                    }
+                }
+            });
+        }
+        
+        // Las funciones de renderizado de contenido se mantienen igual
+        function renderShortcutsContent(item, contentIndex, tabId) {
+            let shortcutsHTML = '';
+            
+            if (item.shortcuts && item.shortcuts.length > 0) {
+                shortcutsHTML = '<div class="shortcuts-grid">';
+                
+                item.shortcuts.forEach((shortcut, shortcutIndex) => {
+                    let iconHTML = '';
+                    if (shortcut.customIcon) {
+                        iconHTML = `<img src="${shortcut.customIcon}" alt="${shortcut.name}">`;
+                    } else if (shortcut.icon === 'auto') {
+                        const faviconUrl = getFaviconUrl(shortcut.url);
+                        iconHTML = faviconUrl ? 
+                            `<img src="${faviconUrl}" alt="${shortcut.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyem0tMSAxN2MtNC40MSAwLTgtMy41OS04LThzMy41OS04IDgtOCA4IDMuNTkgOCA4LTMuNTkgOC04IDh6Ii8+PHBhdGggZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjQuNSIvPjxwb2x5bGluZSBwb2ludHM9IjEyLDggMTIsMTIgMTUsMTUiLz48L3N2Zz4=';">` : 
+                            `<i class="fas fa-globe"></i>`;
+                    } else {
+                        iconHTML = `<i class="${shortcut.icon}"></i>`;
+                    }
+                    
+                    shortcutsHTML += `
+                        <div class="shortcut" data-shortcut-index="${shortcutIndex}">
+                            <div class="shortcut-actions">
+                                <button class="edit-shortcut" data-index="${shortcutIndex}"><i class="fas fa-edit"></i></button>
+                                <button class="delete-shortcut" data-index="${shortcutIndex}"><i class="fas fa-trash"></i></button>
+                            </div>
+                            <div class="shortcut-icon">${iconHTML}</div>
+                            <div class="shortcut-name">${shortcut.name}</div>
+                        </div>
+                    `;
+                });
+                
+                shortcutsHTML += '</div>';
+            } else {
+                shortcutsHTML = '<p>No hay accesos directos en esta sección.</p>';
+            }
+            
+            return `
+                <div class="content-item-header">
+                    <h4><i class="fas fa-th"></i> ${item.title || 'Accesos Directos'}</h4>
+                    <div class="content-actions">
+                        <button class="btn-secondary add-shortcut-btn" data-content-index="${contentIndex}">Añadir Acceso</button>
+                        <button class="btn-secondary edit-content-btn" data-content-index="${contentIndex}">Editar</button>
+                        <button class="btn-secondary delete-content-btn" data-content-index="${contentIndex}">Eliminar</button>
+                    </div>
+                </div>
+                <div class="content-item-body">
+                    ${shortcutsHTML}
+                </div>
+            `;
+        }
+        
+        function renderIframeContent(item, index, tabId) {
+            return `
+                <div class="content-item-header">
+                    <h4><i class="fas fa-window-maximize"></i> ${item.title || 'Página Web'}</h4>
+                    <div class="content-actions">
+                        <button class="btn-secondary edit-content-btn" data-content-index="${index}">Editar</button>
+                        <button class="btn-secondary delete-content-btn" data-content-index="${index}">Eliminar</button>
+                    </div>
+                </div>
+                <div class="content-item-body">
+                    <iframe src="${item.url}" class="iframe-container" title="${item.title || 'Página embebida'}" allow="fullscreen"></iframe>
+                </div>
+            `;
+        }
+        
+        function renderTextContent(item, index, tabId) {
+            return `
+                <div class="content-item-header">
+                    <h4><i class="fas fa-file-alt"></i> ${item.title || 'Texto'}</h4>
+                    <div class="content-actions">
+                        <button class="btn-secondary edit-content-btn" data-content-index="${index}">Editar</button>
+                        <button class="btn-secondary delete-content-btn" data-content-index="${index}">Eliminar</button>
+                    </div>
+                </div>
+                <div class="content-item-body">
+                    <div class="text-content">${item.text || 'Texto no definido'}</div>
+                </div>
+            `;
+        }
+        
+        function renderImageContent(item, index, tabId) {
+            return `
+                <div class="content-item-header">
+                    <h4><i class="fas fa-image"></i> ${item.title || 'Imagen'}</h4>
+                    <div class="content-actions">
+                        <button class="btn-secondary edit-content-btn" data-content-index="${index}">Editar</button>
+                        <button class="btn-secondary delete-content-btn" data-content-index="${index}">Eliminar</button>
+                    </div>
+                </div>
+                <div class="content-item-body">
+                    <div class="image-content">
+                        <img src="${item.url}" alt="${item.title || 'Imagen'}">
+                        ${item.caption ? `<p>${item.caption}</p>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderVideoContent(item, index, tabId) {
+            return `
+                <div class="content-item-header">
+                    <h4><i class="fas fa-video"></i> ${item.title || 'Video'}</h4>
+                    <div class="content-actions">
+                        <button class="btn-secondary edit-content-btn" data-content-index="${index}">Editar</button>
+                        <button class="btn-secondary delete-content-btn" data-content-index="${index}">Eliminar</button>
+                    </div>
+                </div>
+                <div class="content-item-body">
+                    <div class="video-container">
+                        <iframe src="${item.url}" allowfullscreen></iframe>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderRSSContent(item, index, tabId) {
+            return `
+                <div class="content-item-header">
+                    <h4><i class="fas fa-rss"></i> ${item.title || 'Feed RSS'}</h4>
+                    <div class="content-actions">
+                        <button class="btn-secondary edit-content-btn" data-content-index="${index}">Editar</button>
+                        <button class="btn-secondary delete-content-btn" data-content-index="${index}">Eliminar</button>
+                    </div>
+                </div>
+                <div class="content-item-body">
+                    <div class="rss-feed" id="rss-feed-${index}">
+                        <p>Cargando feed RSS...</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Actualizar reloj
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-ES', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+            const dateString = now.toLocaleDateString('es-ES', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            document.getElementById('clock').innerHTML = 
+                `${dateString} - ${timeString}`;
+        }
+        
+        // Obtener favicon de una URL
+        function getFaviconUrl(url) {
+            try {
+                const domain = new URL(url).hostname;
+                
+                const knownIcons = {
+                    'gmail.com': 'https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico',
+                    'drive.google.com': 'https://ssl.gstatic.com/images/icons/material/system/2x/drive_googblue_24dp.png',
+                    'youtube.com': 'https://www.youtube.com/favicon.ico',
+                    'translate.google.com': 'https://www.gstatic.com/images/branding/product/2x/translate_24dp.png',
+                    'outlook.office.com': 'https://static2.sharepointonline.com/files/fabric/assets/item-types/96/outlook.png',
+                    'aulavirtual.upc.edu.pe': 'https://aulavirtual.upc.edu.pe/theme/image.php/boost/theme/1633432803/favicon'
+                };
+                
+                for (const knownDomain in knownIcons) {
+                    if (domain.includes(knownDomain)) {
+                        return knownIcons[knownDomain];
+                    }
+                }
+                
+                return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+            } catch (e) {
+                return '';
+            }
+        }
+        
+        // Cargar fondo guardado
+        function loadBackground() {
+            const savedBg = localStorage.getItem('background');
+            if (savedBg) {
+                const bgConfig = JSON.parse(savedBg);
+                document.getElementById('bgSelector').value = bgConfig.type;
+                document.getElementById('customBg').value = bgConfig.customUrl || '';
+                applyBackground();
+            }
+        }
+        
+        // Aplicar fondo
+        function applyBackground() {
+            const bgSelector = document.getElementById('bgSelector');
+            const customBg = document.getElementById('customBg').value;
+            
+            if (customBg) {
+                document.body.style.backgroundImage = `url('${customBg}')`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                document.body.style.animation = 'none';
+            } else {
+                switch(bgSelector.value) {
+                    case 'gradient':
+                        document.body.style.background = 'linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d)';
+                        document.body.style.backgroundSize = '400% 400%';
+                        document.body.style.animation = 'gradientBG 15s ease infinite';
+                        break;
+                    case 'image1':
+                        document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')";
+                        document.body.style.backgroundSize = 'cover';
+                        document.body.style.animation = 'none';
+                        break;
+                    case 'image2':
+                        document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')";
+                        document.body.style.backgroundSize = 'cover';
+                        document.body.style.animation = 'none';
+                        break;
+                    case 'image3':
+                        document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')";
+                        document.body.style.backgroundSize = 'cover';
+                        document.body.style.animation = 'none';
+                        break;
+                    case 'image4':
+                        document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')";
+                        document.body.style.backgroundSize = 'cover';
+                        document.body.style.animation = 'none';
+                        break;
+                }
+            }
+            
+            localStorage.setItem('background', JSON.stringify({
+                type: bgSelector.value,
+                customUrl: customBg
+            }));
+        }
+        
+        // Cerrar modales
+        function closeModals() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
+        }
+    </script>
 </body>
 </html>

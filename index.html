@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Página de Inicio Personalizada</title>
+    <title>Biblioteca UPC - Página de Inicio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -198,6 +198,12 @@
             justify-content: center;
         }
         
+        .shortcut-icon img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 5px;
+        }
+        
         .shortcut-name {
             font-size: 12px;
             text-align: center;
@@ -226,6 +232,8 @@
             max-width: 500px;
             color: #333;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
         }
         
         .modal-header {
@@ -303,7 +311,7 @@
         
         .icon-selector {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 10px;
             margin-top: 10px;
             max-height: 200px;
@@ -327,6 +335,50 @@
         }
         
         .icon-option.selected {
+            background: #4285f4;
+            color: white;
+        }
+        
+        .icon-option img {
+            max-width: 100%;
+            max-height: 24px;
+        }
+        
+        .custom-icon-upload {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .custom-icon-preview {
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .custom-icon-preview img {
+            max-width: 40px;
+            max-height: 40px;
+            border-radius: 5px;
+        }
+        
+        .auto-icon-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        
+        .auto-icon-option:hover {
+            background: #f0f0f0;
+        }
+        
+        .auto-icon-option.selected {
             background: #4285f4;
             color: white;
         }
@@ -358,6 +410,10 @@
                 width: 100%;
                 justify-content: center;
             }
+            
+            .icon-selector {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
         
         /* Estilos para el drag and drop */
@@ -378,8 +434,8 @@
     <div class="container">
         <header>
             <div class="logo">
-                <i class="fas fa-home"></i>
-                Mi<span>Chrome</span>
+                <i class="fas fa-book"></i>
+                Biblioteca <span>UPC</span>
             </div>
             <div class="controls">
                 <button class="btn" id="addShortcutBtn">
@@ -410,7 +466,7 @@
         </div>
         
         <div class="credit">
-            Página de inicio personalizada - Los cambios se guardan localmente en tu navegador
+            Página de inicio personalizada - Biblioteca UPC - Los cambios se guardan localmente en tu navegador
         </div>
     </div>
     
@@ -435,25 +491,52 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Icono</label>
-                    <div class="icon-selector" id="iconSelector">
-                        <div class="icon-option" data-icon="fas fa-envelope">📧</div>
-                        <div class="icon-option" data-icon="fas fa-cloud">☁️</div>
-                        <div class="icon-option" data-icon="fas fa-calendar">📅</div>
-                        <div class="icon-option" data-icon="fab fa-youtube">▶️</div>
-                        <div class="icon-option" data-icon="fas fa-map">🗺️</div>
-                        <div class="icon-option" data-icon="fas fa-language">🔤</div>
-                        <div class="icon-option" data-icon="fab fa-github">💻</div>
-                        <div class="icon-option" data-icon="fas fa-film">🎬</div>
-                        <div class="icon-option" data-icon="fas fa-shopping-cart">🛒</div>
-                        <div class="icon-option" data-icon="fas fa-music">🎵</div>
-                        <div class="icon-option" data-icon="fas fa-book">📚</div>
-                        <div class="icon-option" data-icon="fas fa-gamepad">🎮</div>
-                        <div class="icon-option" data-icon="fas fa-newspaper">📰</div>
-                        <div class="icon-option" data-icon="fas fa-plane">✈️</div>
-                        <div class="icon-option" data-icon="fas fa-weather">🌤️</div>
+                    <label>Selección de icono</label>
+                    
+                    <div class="auto-icon-option" id="autoIconOption">
+                        <i class="fas fa-magic"></i>
+                        <div>
+                            <div>Icono automático desde la URL</div>
+                            <small>Se intentará obtener el favicon del sitio web automáticamente</small>
+                        </div>
                     </div>
-                    <input type="hidden" id="shortcutIcon" value="fas fa-star">
+                    
+                    <div class="icon-selector" id="iconSelector">
+                        <div class="icon-option" data-icon="fas fa-envelope"><i class="fas fa-envelope"></i></div>
+                        <div class="icon-option" data-icon="fas fa-cloud"><i class="fas fa-cloud"></i></div>
+                        <div class="icon-option" data-icon="fab fa-google-drive"><i class="fab fa-google-drive"></i></div>
+                        <div class="icon-option" data-icon="fab fa-youtube"><i class="fab fa-youtube"></i></div>
+                        <div class="icon-option" data-icon="fas fa-language"><i class="fas fa-language"></i></div>
+                        <div class="icon-option" data-icon="fas fa-book"><i class="fas fa-book"></i></div>
+                        <div class="icon-option" data-icon="fas fa-graduation-cap"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="icon-option" data-icon="fas fa-university"><i class="fas fa-university"></i></div>
+                        <div class="icon-option" data-icon="fas fa-laptop"><i class="fas fa-laptop"></i></div>
+                        <div class="icon-option" data-icon="fas fa-file-pdf"><i class="fas fa-file-pdf"></i></div>
+                        <div class="icon-option" data-icon="fas fa-video"><i class="fas fa-video"></i></div>
+                        <div class="icon-option" data-icon="fas fa-music"><i class="fas fa-music"></i></div>
+                        <div class="icon-option" data-icon="fas fa-gamepad"><i class="fas fa-gamepad"></i></div>
+                        <div class="icon-option" data-icon="fas fa-newspaper"><i class="fas fa-newspaper"></i></div>
+                        <div class="icon-option" data-icon="fas fa-plane"><i class="fas fa-plane"></i></div>
+                        <div class="icon-option" data-icon="fas fa-sun"><i class="fas fa-sun"></i></div>
+                        <div class="icon-option" data-icon="fas fa-star"><i class="fas fa-star"></i></div>
+                        <div class="icon-option" data-icon="fas fa-heart"><i class="fas fa-heart"></i></div>
+                        <div class="icon-option" data-icon="fas fa-globe"><i class="fas fa-globe"></i></div>
+                        <div class="icon-option" data-icon="fas fa-home"><i class="fas fa-home"></i></div>
+                        <div class="icon-option" data-icon="fas fa-search"><i class="fas fa-search"></i></div>
+                        <div class="icon-option" data-icon="fas fa-user"><i class="fas fa-user"></i></div>
+                        <div class="icon-option" data-icon="fas fa-cog"><i class="fas fa-cog"></i></div>
+                        <div class="icon-option" data-icon="fas fa-bell"><i class="fas fa-bell"></i></div>
+                        <div class="icon-option" data-icon="fas fa-calendar"><i class="fas fa-calendar"></i></div>
+                    </div>
+                    
+                    <div class="custom-icon-upload">
+                        <label for="customIconUpload">Subir icono personalizado:</label>
+                        <input type="file" id="customIconUpload" accept="image/*" style="margin-top: 5px;">
+                        <div class="custom-icon-preview" id="customIconPreview"></div>
+                    </div>
+                    
+                    <input type="hidden" id="shortcutIcon" value="auto">
+                    <input type="hidden" id="customIconData" value="">
                 </div>
                 
                 <div class="form-actions">
@@ -496,16 +579,13 @@
     </div>
 
     <script>
-        // Datos iniciales de accesos directos
+        // Datos iniciales de accesos directos (solo los solicitados)
         let shortcuts = [
-            { name: "Gmail", url: "https://gmail.com", icon: "fas fa-envelope" },
-            { name: "Drive", url: "https://drive.google.com", icon: "fas fa-cloud" },
-            { name: "Calendar", url: "https://calendar.google.com", icon: "fas fa-calendar" },
-            { name: "YouTube", url: "https://youtube.com", icon: "fab fa-youtube" },
-            { name: "Maps", url: "https://maps.google.com", icon: "fas fa-map" },
-            { name: "Translate", url: "https://translate.google.com", icon: "fas fa-language" },
-            { name: "GitHub", url: "https://github.com", icon: "fab fa-github" },
-            { name: "Netflix", url: "https://netflix.com", icon: "fas fa-film" }
+            { name: "Outlook Office 365", url: "https://outlook.office.com", icon: "auto", customIcon: "" },
+            { name: "Drive", url: "https://drive.google.com", icon: "auto", customIcon: "" },
+            { name: "Gmail", url: "https://gmail.com", icon: "auto", customIcon: "" },
+            { name: "YouTube", url: "https://youtube.com", icon: "auto", customIcon: "" },
+            { name: "Translate", url: "https://translate.google.com", icon: "auto", customIcon: "" }
         ];
         
         let editMode = false;
@@ -521,6 +601,10 @@
         const shortcutNameInput = document.getElementById('shortcutName');
         const shortcutUrlInput = document.getElementById('shortcutUrl');
         const shortcutIconInput = document.getElementById('shortcutIcon');
+        const customIconDataInput = document.getElementById('customIconData');
+        const customIconUpload = document.getElementById('customIconUpload');
+        const customIconPreview = document.getElementById('customIconPreview');
+        const autoIconOption = document.getElementById('autoIconOption');
         
         // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
@@ -566,6 +650,16 @@
             localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
         }
         
+        // Obtener favicon de una URL
+        function getFaviconUrl(url) {
+            try {
+                const domain = new URL(url).hostname;
+                return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+            } catch (e) {
+                return '';
+            }
+        }
+        
         // Renderizar accesos directos
         function renderShortcuts() {
             shortcutsContainer.innerHTML = '';
@@ -574,6 +668,19 @@
                 const shortcutElement = document.createElement('div');
                 shortcutElement.className = 'shortcut';
                 shortcutElement.draggable = editMode;
+                
+                let iconHTML = '';
+                if (shortcut.customIcon) {
+                    iconHTML = `<img src="${shortcut.customIcon}" alt="${shortcut.name}">`;
+                } else if (shortcut.icon === 'auto') {
+                    const faviconUrl = getFaviconUrl(shortcut.url);
+                    iconHTML = faviconUrl ? 
+                        `<img src="${faviconUrl}" alt="${shortcut.name}">` : 
+                        `<i class="fas fa-link"></i>`;
+                } else {
+                    iconHTML = `<i class="${shortcut.icon}"></i>`;
+                }
+                
                 shortcutElement.innerHTML = `
                     ${editMode ? `
                     <div class="shortcut-actions">
@@ -581,7 +688,7 @@
                         <button class="delete-shortcut" data-index="${index}"><i class="fas fa-trash"></i></button>
                     </div>
                     ` : ''}
-                    <div class="shortcut-icon">${getIconHTML(shortcut.icon)}</div>
+                    <div class="shortcut-icon">${iconHTML}</div>
                     <div class="shortcut-name">${shortcut.name}</div>
                 `;
                 
@@ -650,14 +757,6 @@
             }
         }
         
-        // Obtener HTML del icono
-        function getIconHTML(iconClass) {
-            if (iconClass.startsWith('fa-')) {
-                return `<i class="${iconClass}"></i>`;
-            }
-            return iconClass; // Para emojis
-        }
-        
         // Cambiar modo de edición
         document.getElementById('editModeBtn').addEventListener('click', function() {
             editMode = !editMode;
@@ -672,7 +771,16 @@
             modalTitle.textContent = 'Añadir nuevo acceso directo';
             shortcutForm.reset();
             shortcutIndexInput.value = '';
-            shortcutIconInput.value = 'fas fa-star';
+            shortcutIconInput.value = 'auto';
+            customIconDataInput.value = '';
+            customIconPreview.innerHTML = '';
+            
+            // Seleccionar automáticamente la opción de icono automático
+            autoIconOption.classList.add('selected');
+            document.querySelectorAll('.icon-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
             shortcutModal.style.display = 'flex';
         });
         
@@ -684,15 +792,31 @@
             shortcutNameInput.value = shortcut.name;
             shortcutUrlInput.value = shortcut.url;
             shortcutIconInput.value = shortcut.icon;
+            customIconDataInput.value = shortcut.customIcon || '';
             
-            // Seleccionar el icono actual
-            document.querySelectorAll('.icon-option').forEach(option => {
-                if (option.getAttribute('data-icon') === shortcut.icon) {
-                    option.classList.add('selected');
-                } else {
-                    option.classList.remove('selected');
-                }
-            });
+            // Mostrar vista previa del icono personalizado si existe
+            if (shortcut.customIcon) {
+                customIconPreview.innerHTML = `<img src="${shortcut.customIcon}" alt="Icono personalizado">`;
+            } else {
+                customIconPreview.innerHTML = '';
+            }
+            
+            // Seleccionar la opción correcta
+            if (shortcut.icon === 'auto') {
+                autoIconOption.classList.add('selected');
+                document.querySelectorAll('.icon-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+            } else {
+                autoIconOption.classList.remove('selected');
+                document.querySelectorAll('.icon-option').forEach(option => {
+                    if (option.getAttribute('data-icon') === shortcut.icon) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+            }
             
             shortcutModal.style.display = 'flex';
         }
@@ -706,15 +830,49 @@
             }
         }
         
-        // Seleccionar icono
+        // Seleccionar icono automático
+        autoIconOption.addEventListener('click', function() {
+            autoIconOption.classList.add('selected');
+            document.querySelectorAll('.icon-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            shortcutIconInput.value = 'auto';
+            customIconDataInput.value = '';
+            customIconPreview.innerHTML = '';
+        });
+        
+        // Seleccionar icono de la lista
         document.querySelectorAll('.icon-option').forEach(option => {
             option.addEventListener('click', function() {
                 document.querySelectorAll('.icon-option').forEach(opt => {
                     opt.classList.remove('selected');
                 });
+                autoIconOption.classList.remove('selected');
                 this.classList.add('selected');
                 shortcutIconInput.value = this.getAttribute('data-icon');
+                customIconDataInput.value = '';
+                customIconPreview.innerHTML = '';
             });
+        });
+        
+        // Subir icono personalizado
+        customIconUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    customIconPreview.innerHTML = `<img src="${e.target.result}" alt="Icono personalizado">`;
+                    customIconDataInput.value = e.target.result;
+                    shortcutIconInput.value = 'custom';
+                    
+                    // Deseleccionar otras opciones
+                    autoIconOption.classList.remove('selected');
+                    document.querySelectorAll('.icon-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
         });
         
         // Enviar formulario de acceso directo
@@ -725,7 +883,8 @@
             const shortcut = {
                 name: shortcutNameInput.value,
                 url: shortcutUrlInput.value,
-                icon: shortcutIconInput.value
+                icon: shortcutIconInput.value,
+                customIcon: customIconDataInput.value
             };
             
             if (index === '') {

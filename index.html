@@ -7,36 +7,52 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Agregar SDK de Firebase -->
     <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    // CONFIGURACIÓN FIREBASE MEJORADA - SIN FALLBACK LOCAL
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyA0gxgrmWx7pwffdfyw8bqv0TfmzNK7UME",
-            authDomain: "misfavoritos-402b0.firebaseapp.com",
-            projectId: "misfavoritos-402b0",
-            storageBucket: "misfavoritos-402b0.firebasestorage.app",
-            messagingSenderId: "115400831622",
-            appId: "1:115400831622:web:a63ccaf3d31aba087e5707",
-            measurementId: "G-J680EVJ2E2"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyA0gxgrmWx7pwffdfyw8bqv0TfmzNK7UME",
+        authDomain: "misfavoritos-402b0.firebaseapp.com",
+        projectId: "misfavoritos-402b0",
+        storageBucket: "misfavoritos-402b0.firebasestorage.app",
+        messagingSenderId: "115400831622",
+        appId: "1:115400831622:web:a63ccaf3d31aba087e5707",
+        measurementId: "G-J680EVJ2E2"
+    };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+    // Intentar inicializar Firebase de forma más agresiva
+    let firebaseInitialized = false;
+    let app, db, auth;
 
-        // Hacer variables globales para usar en el resto del código
+    try {
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+        
+        // Configuración específica para GitHub Pages
+        auth.settings.appVerificationDisabledForTesting = false;
+        
+        // Forzar configuración de dominio
+        auth.useDeviceLanguage();
+        
         window.firebaseApp = app;
         window.firebaseDB = db;
         window.firebaseAuth = auth;
+        firebaseInitialized = true;
         
-        console.log('Firebase inicializado correctamente');
-    </script>
+        console.log('✅ Firebase inicializado correctamente');
+        
+    } catch (error) {
+        console.error('❌ Error crítico con Firebase:', error);
+        // NO hay fallback local - forzar recarga o mostrar error
+        showFatalError('Error de conexión con la nube. Recarga la página.');
+    }
+
+    // Exportar para uso global
+    window.firebaseInitialized = firebaseInitialized;
+</script>
     <style>
         /* Tus estilos CSS existentes se mantienen igual */
         * {

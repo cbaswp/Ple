@@ -313,6 +313,10 @@
             justify-content: center;
         }
         
+        .shortcut-actions button:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
         .shortcut-icon {
             font-size: 28px;
             margin-bottom: 10px;
@@ -328,6 +332,94 @@
             text-align: center;
             word-break: break-word;
             max-width: 100%;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            color: #333;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            color: #4285f4;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn-primary {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .btn-secondary {
+            background: #f1f1f1;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
         }
         
         .sync-status {
@@ -357,53 +449,6 @@
             background: rgba(76, 175, 80, 0.8);
         }
         
-        .fatal-error {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-        
-        .fatal-error-content {
-            background: #d32f2f;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 500px;
-        }
-        
-        .fatal-error h1 {
-            margin: 0 0 20px 0;
-            font-size: 24px;
-        }
-        
-        .fatal-error p {
-            margin: 0 0 25px 0;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-        
-        .fatal-error button {
-            background: white;
-            color: #d32f2f;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
         .loading {
             text-align: center;
             padding: 50px;
@@ -495,6 +540,56 @@
         <span>Sincronizando...</span>
     </div>
 
+    <!-- Modal para añadir acceso directo -->
+    <div class="modal" id="shortcutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Añadir Acceso Directo</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="shortcutForm">
+                <div class="form-group">
+                    <label for="shortcutName">Nombre</label>
+                    <input type="text" class="form-control" id="shortcutName" required placeholder="Ej: Google">
+                </div>
+                <div class="form-group">
+                    <label for="shortcutUrl">URL</label>
+                    <input type="url" class="form-control" id="shortcutUrl" required placeholder="https://ejemplo.com">
+                </div>
+                <div class="form-group">
+                    <label for="shortcutIcon">Icono (código FontAwesome)</label>
+                    <input type="text" class="form-control" id="shortcutIcon" placeholder="fab fa-google" value="fas fa-link">
+                    <small>Ej: fab fa-google, fas fa-envelope, fab fa-youtube</small>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelShortcut">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de configuración -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Configuración</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="bgSelector">Fondo de pantalla:</label>
+                <select class="form-control" id="bgSelector">
+                    <option value="gradient">Degradado de colores</option>
+                    <option value="solid">Color sólido</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" id="cancelSettings">Cancelar</button>
+                <button type="button" class="btn-primary" id="applySettings">Aplicar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // CONFIGURACIÓN FIREBASE
         const firebaseConfig = {
@@ -513,13 +608,13 @@
         let userId = null;
         let db = null;
         let auth = null;
+        let currentEditingTabIndex = null;
 
         // FUNCIÓN DE INICIALIZACIÓN PRINCIPAL
         async function initializeApp() {
             console.log('🚀 Iniciando aplicación...');
             
             try {
-                // Mostrar mensaje de carga
                 showLoading('Inicializando Firebase...');
                 
                 // Inicializar Firebase
@@ -536,20 +631,24 @@
                 // Autenticación anónima
                 await signInAnonymously();
                 
-                // Cargar datos
-                await loadTabsFromFirebase();
+                // Cargar datos y configurar sincronización en tiempo real
+                await setupFirebaseListener();
                 
                 // Configurar event listeners
                 setupEventListeners();
                 
-                // Ocultar loading y mostrar interfaz
+                // Ocultar loading
                 hideLoading();
                 
                 console.log('✅ Aplicación iniciada correctamente');
                 
             } catch (error) {
                 console.error('❌ Error inicializando la aplicación:', error);
-                showFatalError('Error al cargar la aplicación: ' + error.message);
+                // Usar datos por defecto como fallback
+                tabs = getDefaultTabs();
+                renderTabs();
+                setupEventListeners();
+                hideLoading();
             }
         }
 
@@ -562,47 +661,70 @@
                 userId = userCredential.user.uid;
                 
                 console.log('✅ Usuario autenticado:', userId);
-                showSyncStatus('✅ Conectado', 'success');
-                
-                setTimeout(() => hideSyncStatus(), 2000);
                 
             } catch (error) {
                 console.error('❌ Error de autenticación:', error);
-                throw error;
+                // Generar un ID de usuario local
+                userId = 'local-user-' + Math.random().toString(36).substr(2, 9);
+                console.log('⚠️ Usando ID local:', userId);
             }
         }
 
-        // CARGAR PESTAÑAS DESDE FIREBASE
-        async function loadTabsFromFirebase() {
+        // CONFIGURAR LISTENER DE FIREBASE EN TIEMPO REAL
+        async function setupFirebaseListener() {
             try {
-                showSyncStatus('📥 Cargando datos...', 'syncing');
+                const userDocRef = db.collection('users').doc(userId);
                 
-                const userDoc = await db.collection('users').doc(userId).get();
-                
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    if (userData.tabs && userData.tabs.length > 0) {
-                        tabs = userData.tabs;
-                        console.log('✅ Datos cargados:', tabs.length, 'pestañas');
-                    } else {
-                        tabs = getDefaultTabs();
-                        await saveTabsToFirebase();
-                    }
+                // Cargar datos iniciales
+                const doc = await userDocRef.get();
+                if (doc.exists) {
+                    const userData = doc.data();
+                    tabs = userData.tabs || getDefaultTabs();
+                    console.log('✅ Datos cargados desde Firebase');
                 } else {
                     tabs = getDefaultTabs();
-                    await saveTabsToFirebase();
+                    await userDocRef.set({ tabs: tabs, lastUpdated: new Date().toISOString() });
                 }
                 
-                renderTabs();
-                showSyncStatus('✅ Datos cargados', 'success');
+                // Escuchar cambios en tiempo real
+                userDocRef.onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        if (userData.tabs && JSON.stringify(tabs) !== JSON.stringify(userData.tabs)) {
+                            tabs = userData.tabs;
+                            renderTabs();
+                            showSyncStatus('🔄 Datos actualizados', 'success');
+                            setTimeout(() => hideSyncStatus(), 2000);
+                        }
+                    }
+                });
+                
+                showSyncStatus('✅ Sincronizado con Firebase', 'success');
+                setTimeout(() => hideSyncStatus(), 3000);
+                
+            } catch (error) {
+                console.error('❌ Error configurando Firebase listener:', error);
+                tabs = getDefaultTabs();
+                showSyncStatus('⚠️ Modo local (sin sincronización)', 'error');
+            }
+        }
+
+        // GUARDAR EN FIREBASE
+        async function saveTabsToFirebase() {
+            try {
+                showSyncStatus('💾 Guardando...', 'syncing');
+                
+                await db.collection('users').doc(userId).set({
+                    tabs: tabs,
+                    lastUpdated: new Date().toISOString()
+                }, { merge: true });
+                
+                showSyncStatus('✅ Guardado en la nube', 'success');
                 setTimeout(() => hideSyncStatus(), 2000);
                 
             } catch (error) {
-                console.error('❌ Error cargando datos:', error);
-                // Usar datos por defecto como fallback
-                tabs = getDefaultTabs();
-                renderTabs();
-                showSyncStatus('⚠️ Usando datos locales', 'error');
+                console.error('❌ Error guardando en Firebase:', error);
+                showSyncStatus('❌ Error al guardar', 'error');
             }
         }
 
@@ -645,52 +767,8 @@
                             ]
                         }
                     ]
-                },
-                {
-                    id: 'tab-2',
-                    name: "Recursos",
-                    icon: "fas fa-book",
-                    active: false,
-                    content: [
-                        {
-                            type: "shortcuts",
-                            shortcuts: [
-                                { 
-                                    id: 'sc-5',
-                                    name: "GitHub", 
-                                    url: "https://github.com", 
-                                    icon: "fab fa-github" 
-                                },
-                                { 
-                                    id: 'sc-6',
-                                    name: "Stack Overflow", 
-                                    url: "https://stackoverflow.com", 
-                                    icon: "fab fa-stack-overflow" 
-                                }
-                            ]
-                        }
-                    ]
                 }
             ];
-        }
-
-        // GUARDAR EN FIREBASE
-        async function saveTabsToFirebase() {
-            try {
-                showSyncStatus('💾 Guardando...', 'syncing');
-                
-                await db.collection('users').doc(userId).set({
-                    tabs: tabs,
-                    lastUpdated: new Date().toISOString()
-                });
-                
-                showSyncStatus('✅ Guardado', 'success');
-                setTimeout(() => hideSyncStatus(), 2000);
-                
-            } catch (error) {
-                console.error('❌ Error guardando:', error);
-                showSyncStatus('❌ Error guardando', 'error');
-            }
         }
 
         // RENDERIZAR PESTAÑAS
@@ -699,16 +777,12 @@
             const tabContents = document.getElementById('tabContents');
             const addTabBtn = document.getElementById('addTabBtn');
             
-            if (!tabsList || !tabContents) return;
+            if (!tabsList) return;
             
-            // Limpiar contenidos anteriores
             tabsList.innerHTML = '';
             tabContents.innerHTML = '';
-            
-            // Mostrar botón de añadir pestaña
             addTabBtn.style.display = 'flex';
             
-            // Aplicar modo edición
             document.body.classList.toggle('edit-mode', editMode);
             
             tabs.forEach((tab, index) => {
@@ -738,7 +812,7 @@
                     }
                 });
                 
-                // Botones de edición
+                // Botones de edición (solo en modo edición)
                 if (editMode) {
                     const editBtn = tabElement.querySelector('.edit-tab');
                     const deleteBtn = tabElement.querySelector('.delete-tab');
@@ -750,11 +824,7 @@
                     
                     deleteBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        if (tabs.length > 1) {
-                            deleteTab(index);
-                        } else {
-                            alert('Debe haber al menos una pestaña');
-                        }
+                        deleteTab(index);
                     });
                 }
                 
@@ -766,13 +836,13 @@
                 tabContent.id = `content-${tab.id}`;
                 
                 if (tab.content && tab.content.length > 0) {
-                    renderTabContent(tabContent, tab.content, tab.id);
+                    renderTabContent(tabContent, tab.content, tab.id, index);
                 } else {
                     tabContent.innerHTML = `
                         <div class="empty-tab-message">
                             <i class="fas fa-plus-circle"></i>
                             <h3>Esta pestaña está vacía</h3>
-                            <p>Haz clic en "Añadir Contenido" para agregar contenido</p>
+                            <p>Haz clic en "Añadir Contenido" para agregar accesos directos</p>
                         </div>
                     `;
                 }
@@ -782,16 +852,16 @@
         }
 
         // RENDERIZAR CONTENIDO DE PESTAÑA
-        function renderTabContent(container, content, tabId) {
+        function renderTabContent(container, content, tabId, tabIndex) {
             content.forEach(contentItem => {
                 if (contentItem.type === 'shortcuts') {
-                    renderShortcuts(container, contentItem.shortcuts, tabId);
+                    renderShortcuts(container, contentItem.shortcuts, tabId, tabIndex);
                 }
             });
         }
 
         // RENDERIZAR ACCESOS DIRECTOS
-        function renderShortcuts(container, shortcuts, tabId) {
+        function renderShortcuts(container, shortcuts, tabId, tabIndex) {
             const grid = document.createElement('div');
             grid.className = 'shortcuts-grid';
             
@@ -799,19 +869,22 @@
                 grid.innerHTML = `
                     <div style="grid-column: 1/-1; text-align: center; padding: 40px; opacity: 0.7;">
                         <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 20px;"></i>
-                        <p>No hay accesos directos</p>
+                        <p>No hay accesos directos en esta pestaña</p>
+                        <button class="btn" onclick="openShortcutModal(${tabIndex})" style="margin-top: 10px;">
+                            <i class="fas fa-plus"></i> Añadir acceso directo
+                        </button>
                     </div>
                 `;
             } else {
-                shortcuts.forEach(shortcut => {
+                shortcuts.forEach((shortcut, shortcutIndex) => {
                     const shortcutElement = document.createElement('div');
                     shortcutElement.className = 'shortcut';
                     shortcutElement.innerHTML = `
                         <div class="shortcut-actions">
-                            <button class="edit-shortcut" title="Editar">
+                            <button class="edit-shortcut" title="Editar" onclick="editShortcut(${tabIndex}, ${shortcutIndex})">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="delete-shortcut" title="Eliminar">
+                            <button class="delete-shortcut" title="Eliminar" onclick="deleteShortcut(${tabIndex}, ${shortcutIndex})">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -830,20 +903,34 @@
                     
                     grid.appendChild(shortcutElement);
                 });
+                
+                // Botón para añadir más accesos directos
+                if (editMode) {
+                    const addButton = document.createElement('div');
+                    addButton.className = 'shortcut';
+                    addButton.innerHTML = `
+                        <div class="shortcut-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="shortcut-name">Añadir más</div>
+                    `;
+                    addButton.addEventListener('click', () => openShortcutModal(tabIndex));
+                    grid.appendChild(addButton);
+                }
             }
             
             container.appendChild(grid);
         }
 
-        // CAMBIAR DE PESTAÑA
+        // FUNCIONES PRINCIPALES
         function switchTab(tabId) {
             tabs.forEach(tab => {
                 tab.active = tab.id === tabId;
             });
             renderTabs();
+            saveTabsToFirebase();
         }
 
-        // MODO EDICIÓN
         function toggleEditMode() {
             editMode = !editMode;
             document.getElementById('editModeBtn').innerHTML = editMode ? 
@@ -852,14 +939,18 @@
             renderTabs();
         }
 
-        // AÑADIR PESTAÑA
         function addTab() {
             const newTab = {
                 id: 'tab-' + Date.now(),
                 name: 'Nueva Pestaña',
-                icon: 'fas fa-plus',
+                icon: 'fas fa-folder',
                 active: false,
-                content: []
+                content: [
+                    {
+                        type: "shortcuts",
+                        shortcuts: []
+                    }
+                ]
             };
             
             tabs.push(newTab);
@@ -867,7 +958,6 @@
             saveTabsToFirebase();
         }
 
-        // EDITAR PESTAÑA
         function editTab(index) {
             const newName = prompt('Nuevo nombre de la pestaña:', tabs[index].name);
             if (newName && newName.trim() !== '') {
@@ -877,9 +967,13 @@
             }
         }
 
-        // ELIMINAR PESTAÑA
         function deleteTab(index) {
-            if (confirm('¿Estás seguro de que quieres eliminar esta pestaña?')) {
+            if (tabs.length <= 1) {
+                alert('Debe haber al menos una pestaña');
+                return;
+            }
+            
+            if (confirm('¿Estás seguro de que quieres eliminar esta pestaña? Se perderá todo su contenido.')) {
                 tabs.splice(index, 1);
                 if (tabs.length > 0 && !tabs.some(tab => tab.active)) {
                     tabs[0].active = true;
@@ -889,18 +983,135 @@
             }
         }
 
+        // FUNCIONES PARA ACCESOS DIRECTOS
+        function openShortcutModal(tabIndex) {
+            currentEditingTabIndex = tabIndex;
+            document.getElementById('shortcutForm').reset();
+            document.getElementById('shortcutIcon').value = 'fas fa-link';
+            document.getElementById('shortcutModal').style.display = 'flex';
+        }
+
+        function editShortcut(tabIndex, shortcutIndex) {
+            const shortcut = tabs[tabIndex].content[0].shortcuts[shortcutIndex];
+            currentEditingTabIndex = tabIndex;
+            
+            document.getElementById('shortcutName').value = shortcut.name;
+            document.getElementById('shortcutUrl').value = shortcut.url;
+            document.getElementById('shortcutIcon').value = shortcut.icon;
+            
+            // Guardar el índice del shortcut que se está editando
+            document.getElementById('shortcutForm').dataset.editingIndex = shortcutIndex;
+            
+            document.getElementById('shortcutModal').style.display = 'flex';
+        }
+
+        function deleteShortcut(tabIndex, shortcutIndex) {
+            if (confirm('¿Estás seguro de que quieres eliminar este acceso directo?')) {
+                tabs[tabIndex].content[0].shortcuts.splice(shortcutIndex, 1);
+                renderTabs();
+                saveTabsToFirebase();
+            }
+        }
+
+        function saveShortcut(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('shortcutName').value;
+            const url = document.getElementById('shortcutUrl').value;
+            const icon = document.getElementById('shortcutIcon').value;
+            const editingIndex = document.getElementById('shortcutForm').dataset.editingIndex;
+            
+            if (!name || !url) {
+                alert('Por favor, completa todos los campos');
+                return;
+            }
+            
+            const newShortcut = {
+                id: 'sc-' + Date.now(),
+                name: name,
+                url: url,
+                icon: icon || 'fas fa-link'
+            };
+            
+            if (editingIndex !== undefined) {
+                // Editar shortcut existente
+                tabs[currentEditingTabIndex].content[0].shortcuts[editingIndex] = newShortcut;
+                delete document.getElementById('shortcutForm').dataset.editingIndex;
+            } else {
+                // Añadir nuevo shortcut
+                if (!tabs[currentEditingTabIndex].content[0].shortcuts) {
+                    tabs[currentEditingTabIndex].content[0].shortcuts = [];
+                }
+                tabs[currentEditingTabIndex].content[0].shortcuts.push(newShortcut);
+            }
+            
+            document.getElementById('shortcutModal').style.display = 'none';
+            renderTabs();
+            saveTabsToFirebase();
+        }
+
+        // CONFIGURACIÓN
+        function openSettings() {
+            document.getElementById('settingsModal').style.display = 'flex';
+        }
+
+        function applySettings() {
+            const bgSelector = document.getElementById('bgSelector').value;
+            
+            if (bgSelector === 'solid') {
+                document.body.style.background = '#1a2a6c';
+                document.body.style.animation = 'none';
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d)';
+                document.body.style.backgroundSize = '400% 400%';
+                document.body.style.animation = 'gradientBG 15s ease infinite';
+            }
+            
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
         // CONFIGURAR EVENT LISTENERS
         function setupEventListeners() {
             document.getElementById('addTabBtn').addEventListener('click', addTab);
             document.getElementById('editModeBtn').addEventListener('click', toggleEditMode);
             document.getElementById('addShortcutBtn').addEventListener('click', () => {
-                alert('Funcionalidad de añadir contenido en desarrollo');
+                const activeTabIndex = tabs.findIndex(tab => tab.active);
+                if (activeTabIndex !== -1) {
+                    openShortcutModal(activeTabIndex);
+                } else {
+                    alert('Selecciona una pestaña primero');
+                }
             });
-            document.getElementById('settingsBtn').addEventListener('click', () => {
-                alert('Configuración en desarrollo');
+            document.getElementById('settingsBtn').addEventListener('click', openSettings);
+            
+            // Modal de shortcut
+            document.getElementById('shortcutForm').addEventListener('submit', saveShortcut);
+            document.getElementById('cancelShortcut').addEventListener('click', () => {
+                document.getElementById('shortcutModal').style.display = 'none';
             });
             
-            // Enfoque en la búsqueda
+            // Modal de configuración
+            document.getElementById('applySettings').addEventListener('click', applySettings);
+            document.getElementById('cancelSettings').addEventListener('click', () => {
+                document.getElementById('settingsModal').style.display = 'none';
+            });
+            
+            // Cerrar modales
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+            
+            // Cerrar modales al hacer clic fuera
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                    }
+                });
+            });
+            
             document.querySelector('.search-input').focus();
         }
 
@@ -909,16 +1120,10 @@
             const now = new Date();
             const timeString = now.toLocaleTimeString('es-ES');
             const dateString = now.toLocaleDateString('es-ES', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
             });
             
-            const clockElement = document.getElementById('clock');
-            if (clockElement) {
-                clockElement.innerHTML = `${dateString} - ${timeString}`;
-            }
+            document.getElementById('clock').innerHTML = `${dateString} - ${timeString}`;
         }
 
         function showSyncStatus(message, type = 'syncing') {
@@ -952,27 +1157,13 @@
             }
         }
 
-        function showFatalError(message) {
-            document.body.innerHTML = `
-                <div class="fatal-error">
-                    <div class="fatal-error-content">
-                        <h1>❌ Error</h1>
-                        <p>${message}</p>
-                        <button onclick="window.location.reload()">🔄 Recargar Página</button>
-                    </div>
-                </div>
-            `;
-        }
+        // Hacer funciones globales para los onclick
+        window.openShortcutModal = openShortcutModal;
+        window.editShortcut = editShortcut;
+        window.deleteShortcut = deleteShortcut;
 
-        // INICIAR APLICACIÓN CUANDO EL DOM ESTÉ LISTO
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
-        });
-
-        // FALLBACK SI EL DOM YA ESTÁ CARGADO
-        if (document.readyState === 'interactive' || document.readyState === 'complete') {
-            initializeApp();
-        }
+        // INICIAR APLICACIÓN
+        document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
 </html>

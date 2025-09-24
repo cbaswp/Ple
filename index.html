@@ -774,7 +774,7 @@
         let isFirebaseConnected = false;
         let unsubscribeFirebase = null;
         let hasUnsavedChanges = false;
-        let autoSaveEnabled = true;
+        let autoSaveEnabled = false; // DESACTIVADO POR DEFECTO
         let lastSaveTime = null;
 
         // FUNCIONES DE UTILIDAD
@@ -908,9 +908,8 @@
 
         async function saveTabsToFirebase() {
             if (!isFirebaseConnected || !userId) {
-                console.log('⚠️ Firebase no disponible, guardando en localStorage');
-                localStorage.setItem('misfavoritos_tabs', JSON.stringify(tabs));
-                return true;
+                console.log('⚠️ Firebase no disponible');
+                return false;
             }
 
             try {
@@ -1075,7 +1074,7 @@
                 tab.active = tab.id === tabId;
             });
             renderTabs();
-            markChanges();
+            // ELIMINADO: markChanges() - Ya no marca cambios automáticamente
         }
 
         function addTab() {
@@ -1215,30 +1214,16 @@
                 autoSaveEnabled = !autoSaveEnabled;
                 updateAutoSaveToggle();
                 
+                // Solo guardar automáticamente si se acaba de activar y hay cambios
                 if (autoSaveEnabled && hasUnsavedChanges) {
                     autoSave();
                 }
             });
             
-            setupChangeDetection();
+            // ELIMINADO: setupChangeDetection() - Ya no hay detección automática de cambios
         }
 
-        function setupChangeDetection() {
-            let lastSavedState = JSON.stringify(tabs);
-            
-            setInterval(() => {
-                const currentState = JSON.stringify(tabs);
-                if (currentState !== lastSavedState) {
-                    hasUnsavedChanges = true;
-                    lastSavedState = currentState;
-                    updateSaveUI();
-                    
-                    if (autoSaveEnabled) {
-                        autoSave();
-                    }
-                }
-            }, 2000);
-        }
+        // ELIMINADA: Función setupChangeDetection() completa
 
         async function manualSave() {
             const saveBtn = document.getElementById('manualSaveBtn');
@@ -1286,6 +1271,7 @@
         }
 
         function autoSave() {
+            // Solo guardar si el auto guardado está activado y hay cambios
             if (!hasUnsavedChanges || !autoSaveEnabled) return;
             
             saveTabsToFirebase().then(success => {
@@ -1293,6 +1279,7 @@
                     hasUnsavedChanges = false;
                     lastSaveTime = new Date();
                     updateSaveUI();
+                    console.log('✅ Guardado automático exitoso');
                 }
             });
         }
@@ -1353,8 +1340,9 @@
                 hasUnsavedChanges = true;
                 updateSaveUI();
                 
+                // Solo guardar automáticamente si está activado
                 if (autoSaveEnabled) {
-                    setTimeout(() => autoSave(), 1000);
+                    autoSave();
                 }
             }
         }
@@ -1422,7 +1410,7 @@
                 
                 setupEventListeners();
                 updateSaveUI();
-                updateAutoSaveToggle();
+                updateAutoSaveToggle(); // Actualizar interfaz con autoguardado desactivado
                 
                 hideLoading();
                 

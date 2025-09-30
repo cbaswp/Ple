@@ -3,16 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MisFavoritos - Página de Inicio</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="description" content="Página de inicio personalizada con accesos directos a servicios educativos y herramientas digitales">
+    <meta name="keywords" content="favoritos, accesos directos, educación, UPC, herramientas digitales">
+    <meta name="author" content="MisFavoritos">
+    <meta name="robots" content="index, follow">
     
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MisFavoritos - Página de Inicio">
+    <meta property="og:description" content="Página de inicio personalizada con accesos directos a servicios educativos">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    
+    <title>MisFavoritos - Página de Inicio</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    
     <style>
-        /* Todos tus estilos CSS se mantienen igual */
         * {
             margin: 0;
             padding: 0;
@@ -21,14 +34,17 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background: linear-gradient(135deg, #f5f7fa, #e4eaf5);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             min-height: 100vh;
-            color: white;
+            color: #333;
             overflow-x: hidden;
             position: relative;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
         
         @keyframes gradientBG {
@@ -37,26 +53,33 @@
             100% { background-position: 0% 50%; }
         }
         
+        .center-content {
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.3);
             z-index: 1;
+            pointer-events: none;
         }
         
         .container {
             position: relative;
             z-index: 2;
-            max-width: 1400px;
-            margin: 0 auto;
+            width: 100%;
         }
         
         header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             margin-bottom: 30px;
             padding: 10px 0;
@@ -64,13 +87,14 @@
         
         .logo {
             font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
+            color: #4285f4;
         }
         
         .logo span {
-            color: #4285f4;
+            color: #ea4335;
         }
         
         .logo i {
@@ -78,75 +102,83 @@
             font-size: 2.2rem;
         }
         
-        .controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.3s;
-        }
-        
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        
         .clock {
             font-size: 1.1rem;
-            opacity: 0.9;
+            opacity: 0.8;
             text-align: center;
             margin-bottom: 30px;
+            color: #555;
         }
         
         .search-box {
             width: 100%;
-            margin: 20px 0 30px;
+            margin: 20px 0 40px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
         }
         
         .search-form {
-            display: flex;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            border-radius: 30px;
-            overflow: hidden;
-            max-width: 600px;
             width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+        
+        .search-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 0 16px;
+            height: 48px;
+            transition: box-shadow 0.2s;
+        }
+        
+        .search-container:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .search-container:focus-within {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .search-icon {
+            color: #9aa0a6;
+            margin-right: 12px;
+            font-size: 18px;
         }
         
         .search-input {
             flex: 1;
-            padding: 16px 20px;
             border: none;
-            font-size: 16px;
             outline: none;
-            background: rgba(255, 255, 255, 0.95);
+            font-size: 16px;
+            background: transparent;
+            color: #333;
+            height: 100%;
         }
         
-        .search-button {
-            background: #4285f4;
-            color: white;
-            border: none;
-            padding: 0 25px;
+        .search-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .search-action {
+            color: #9aa0a6;
             cursor: pointer;
-            transition: background 0.3s;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
-        .search-button:hover {
-            background: #3367d6;
+        .search-action:hover {
+            background-color: rgba(60, 64, 67, 0.08);
         }
         
         .tabs-container {
@@ -157,10 +189,11 @@
         .tabs-wrapper {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.7);
             border-radius: 10px 10px 0 0;
             overflow-x: auto;
             padding: 0 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         .tabs {
@@ -179,86 +212,30 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            color: #555;
         }
         
         .tab.active {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.9);
             border-bottom: 3px solid #4285f4;
+            color: #4285f4;
         }
         
         .tab:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.15);
-        }
-        
-        .tab-actions {
-            display: none;
-            gap: 5px;
-            margin-left: 8px;
-        }
-        
-        .edit-mode .tab-actions {
-            display: flex;
-        }
-        
-        .tab-action-btn {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 12px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .tab-action-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .add-tab-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 10px;
-            transition: all 0.3s;
-        }
-        
-        .add-tab-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.8);
         }
         
         .tab-content {
             display: none;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.7);
             border-radius: 0 0 10px 10px;
             padding: 20px;
             min-height: 500px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         .tab-content.active {
             display: block;
-        }
-        
-        .empty-tab-message {
-            text-align: center;
-            padding: 60px 20px;
-            opacity: 0.7;
-        }
-        
-        .empty-tab-message i {
-            font-size: 48px;
-            margin-bottom: 20px;
         }
         
         .shortcuts-grid {
@@ -268,7 +245,7 @@
         }
         
         .shortcut {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             border-radius: 12px;
             padding: 15px 10px;
@@ -277,46 +254,16 @@
             flex-direction: column;
             align-items: center;
             position: relative;
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         .shortcut:hover {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-        }
-        
-        .edit-mode .shortcut {
-            cursor: move;
-        }
-        
-        .shortcut-actions {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            display: none;
-            gap: 5px;
-        }
-        
-        .edit-mode .shortcut-actions {
-            display: flex;
-        }
-        
-        .shortcut-actions button {
-            background: rgba(0, 0, 0, 0.5);
-            border: none;
-            color: white;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .shortcut-actions button:hover {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
         }
         
         .shortcut-icon {
@@ -329,259 +276,71 @@
             justify-content: center;
         }
         
+        /* Colores específicos para cada icono */
+        .shortcut[data-shortcut-id="sc-1"] .shortcut-icon i {
+            color: #4285f4;
+        }
+        
+        .shortcut[data-shortcut-id="sc-2"] .shortcut-icon i {
+            color: #f4b400;
+        }
+        
+        .shortcut[data-shortcut-id="sc-3"] .shortcut-icon i {
+            color: #4285f4;
+        }
+        
+        .shortcut[data-shortcut-id="sc-4"] .shortcut-icon i {
+            color: #0f9d58;
+        }
+        
+        .shortcut[data-shortcut-id="sc-5"] .shortcut-icon i {
+            color: #ea4335;
+        }
+        
+        .shortcut[data-shortcut-id="sc-6"] .shortcut-icon i {
+            color: #ff0000;
+        }
+        
+        .shortcut[data-shortcut-id="sc-7"] .shortcut-icon i {
+            color: #4285f4;
+        }
+        
+        .shortcut[data-shortcut-id="sc-8"] .shortcut-icon i {
+            color: #4285f4;
+        }
+        
+        .shortcut[data-shortcut-id="sc-9"] .shortcut-icon i {
+            color: #10a37f;
+        }
+        
         .shortcut-name {
             font-size: 12px;
             text-align: center;
             word-break: break-word;
             max-width: 100%;
         }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            width: 90%;
-            max-width: 500px;
-            color: #333;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .modal-title {
-            font-size: 1.5rem;
-            color: #4285f4;
-        }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #777;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-        
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .btn-primary {
-            background: #4285f4;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        
-        .btn-secondary {
-            background: #f1f1f1;
-            color: #333;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        
-        .sync-status {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            z-index: 1000;
-            color: white;
-        }
-        
-        .sync-status.syncing {
-            background: rgba(66, 133, 244, 0.8);
-        }
-        
-        .sync-status.error {
-            background: rgba(219, 68, 55, 0.8);
-        }
-        
-        .sync-status.success {
-            background: rgba(76, 175, 80, 0.8);
-        }
-        
-        .loading {
+
+        .credit {
+            margin-top: 30px;
             text-align: center;
-            padding: 50px;
-            font-size: 18px;
-        }
-
-        .firebase-status {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            z-index: 1000;
-            color: white;
-        }
-
-        /* Nuevos estilos para el botón de guardar */
-        .save-btn {
-            background: rgba(76, 175, 80, 0.7);
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .save-btn:hover {
-            background: rgba(76, 175, 80, 0.9);
-            transform: translateY(-2px);
-        }
-        
-        .save-btn.saving {
-            background: rgba(33, 150, 243, 0.7);
-        }
-        
-        .save-btn.saved {
-            background: rgba(76, 175, 80, 0.9);
-        }
-        
-        .save-btn.error {
-            background: rgba(244, 67, 54, 0.7);
-        }
-        
-        .save-pulse {
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-        
-        .last-saved {
-            font-size: 11px;
             opacity: 0.7;
-            margin-left: 10px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            font-size: 14px;
+            color: #666;
         }
-        
-        .changes-indicator {
-            width: 8px;
-            height: 8px;
-            background: #ff9800;
-            border-radius: 50%;
-            display: none;
-            margin-left: 5px;
-        }
-        
-        .has-changes .changes-indicator {
+
+        /* Loading animation */
+        .loading {
             display: inline-block;
-            animation: pulse 2s infinite;
-        }
-        
-        .auto-save-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 12px;
-            opacity: 0.8;
-        }
-        
-        .auto-save-toggle {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-        }
-        
-        .toggle-switch {
-            width: 30px;
-            height: 16px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 8px;
-            position: relative;
-            transition: all 0.3s;
-        }
-        
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: white;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,.1);
             border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: all 0.3s;
+            border-top-color: #4285f4;
+            animation: spin 1s ease-in-out infinite;
         }
-        
-        .auto-save-enabled .toggle-switch {
-            background: rgba(76, 175, 80, 0.7);
-        }
-        
-        .auto-save-enabled .toggle-switch::after {
-            left: 16px;
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         @media (max-width: 768px) {
@@ -597,19 +356,7 @@
             header {
                 flex-direction: column;
                 gap: 15px;
-            }
-            
-            .controls {
-                width: 100%;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-            
-            .auto-save-status {
-                order: 3;
-                width: 100%;
-                justify-content: center;
-                margin-top: 10px;
+                text-align: center;
             }
         }
     </style>
@@ -617,193 +364,126 @@
 <body>
     <div class="overlay"></div>
     
-    <!-- Indicador de estado de Firebase -->
-    <div class="firebase-status" id="firebaseStatus">
-        <i class="fas fa-cloud"></i> <span>Conectando...</span>
-    </div>
-    
-    <div class="container">
-        <header>
-            <div class="logo">
-                <i class="fas fa-star"></i>
-                Mis<span>Favoritos</span>
-            </div>
-            <div class="controls">
-                <button class="btn" id="addShortcutBtn">
-                    <i class="fas fa-plus"></i> Añadir Contenido
-                </button>
-                <button class="btn" id="editModeBtn">
-                    <i class="fas fa-edit"></i> Editar
-                </button>
-                
-                <!-- NUEVO BOTÓN DE GUARDADO MANUAL -->
-                <button class="save-btn" id="manualSaveBtn" title="Guardar cambios manualmente">
-                    <i class="fas fa-save"></i> Guardar
-                    <span class="changes-indicator"></span>
-                </button>
-                
-                <button class="btn" id="settingsBtn">
-                    <i class="fas fa-cog"></i> Configuración
-                </button>
-                
-                <!-- ESTADO DEL GUARDADO AUTOMÁTICO -->
-                <div class="auto-save-status">
-                    <div class="last-saved" id="lastSavedInfo">
-                        <i class="fas fa-clock"></i>
-                        <span id="lastSavedTime">Nunca</span>
-                    </div>
-                    <div class="auto-save-toggle" id="autoSaveToggle" title="Activar/desactivar guardado automático">
-                        <span>Auto</span>
-                        <div class="toggle-switch"></div>
-                    </div>
+    <!-- Contenido central completamente centrado -->
+    <div class="center-content">
+        <div class="container">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-star"></i>
+                    Mis<span>Favoritos</span>
                 </div>
-            </div>
-        </header>
-        
-        <div class="clock" id="clock">Cargando hora...</div>
-        
-        <div class="search-box">
-            <form class="search-form" action="https://www.google.com/search" method="GET" target="_top">
-                <input type="text" name="q" class="search-input" placeholder="Buscar en Google...">
-                <button type="submit" class="search-button">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
-        </div>
-        
-        <!-- Pestañas -->
-        <div class="tabs-container">
-            <div class="tabs-wrapper">
-                <div class="tabs" id="tabsList">
-                    <div class="loading" id="loadingMessage">
-                        <i class="fas fa-spinner fa-spin"></i><br>
-                        Cargando aplicación...
-                    </div>
-                </div>
-                <button class="add-tab-btn" id="addTabBtn" title="Añadir nueva pestaña" style="display: none;">
-                    <i class="fas fa-plus"></i>
-                </button>
+            </header>
+            
+            <div class="clock" id="clock">
+                <span class="loading"></span> Cargando...
             </div>
             
-            <div id="tabContents">
-                <!-- Los contenidos de las pestañas se generarán aquí con JavaScript -->
+            <div class="search-box">
+                <form class="search-form" action="https://www.google.com/search" method="GET" target="_top" id="googleSearchForm">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" name="q" class="search-input" placeholder="Buscar en Google..." id="searchInput" autocomplete="off">
+                        <div class="search-actions">
+                            <div class="search-action" id="voiceSearch" title="Búsqueda por voz">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                            <div class="search-action" id="imageSearch" title="Búsqueda por imagen">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </div>
-        
-        <div class="credit">
-            Página de inicio personalizada - MisFavoritos v3.0 - <span id="storageInfo">Sincronización en la nube</span>
-        </div>
-    </div>
-
-    <!-- Indicador de estado de sincronización -->
-    <div class="sync-status" id="syncStatus" style="display: none;">
-        <i class="fas fa-sync-alt"></i>
-        <span>Sincronizando...</span>
-    </div>
-
-    <!-- Modal para añadir acceso directo -->
-    <div class="modal" id="shortcutModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" id="shortcutModalTitle">Añadir Acceso Directo</h2>
-                <button class="close-modal">&times;</button>
+            
+            <div class="tabs-container">
+                <div class="tabs-wrapper">
+                    <div class="tabs" id="tabsList">
+                        <!-- Las pestañas se generarán aquí -->
+                    </div>
+                </div>
+                
+                <div id="tabContents">
+                    <!-- El contenido de las pestañas se generará aquí -->
+                </div>
             </div>
-            <form id="shortcutForm">
-                <input type="hidden" id="editingShortcutIndex" value="">
-                <div class="form-group">
-                    <label for="shortcutName">Nombre</label>
-                    <input type="text" class="form-control" id="shortcutName" required placeholder="Ej: Google">
-                </div>
-                <div class="form-group">
-                    <label for="shortcutUrl">URL</label>
-                    <input type="url" class="form-control" id="shortcutUrl" required placeholder="https://ejemplo.com">
-                </div>
-                <div class="form-group">
-                    <label for="shortcutIcon">Icono (código FontAwesome)</label>
-                    <input type="text" class="form-control" id="shortcutIcon" placeholder="fab fa-google" value="fas fa-link">
-                    <small>Ej: fab fa-google, fas fa-envelope, fab fa-youtube</small>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn-secondary" id="cancelShortcut">Cancelar</button>
-                    <button type="submit" class="btn-primary" id="saveShortcutBtn">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal de configuración -->
-    <div class="modal" id="settingsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Configuración</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="form-group">
-                <label for="bgSelector">Fondo de pantalla:</label>
-                <select class="form-control" id="bgSelector">
-                    <option value="gradient">Degradado de colores</option>
-                    <option value="solid">Color sólido</option>
-                </select>
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn-secondary" id="cancelSettings">Cancelar</button>
-                <button type="button" class="btn-primary" id="applySettings">Aplicar</button>
+            
+            <div class="credit">
+                Página de inicio personalizada - MisFavoritos v3.0
             </div>
         </div>
     </div>
 
     <script>
-        // CONFIGURACIÓN FIREBASE
-        const firebaseConfig = {
-            apiKey: "AIzaSyA0gxgrmWx7pwffdfyw8bqv0TfmzNK7UME",
-            authDomain: "misfavoritos-402b0.firebaseapp.com",
-            projectId: "misfavoritos-402b0",
-            storageBucket: "misfavoritos-402b0.firebasestorage.app",
-            messagingSenderId: "115400831622",
-            appId: "1:115400831622:web:a63ccaf3d31aba087e5707",
-            measurementId: "G-J680EVJ2E2"
-        };
-
-        // VARIABLES GLOBALES
-        let tabs = [];
-        let editMode = false;
-        let userId = null;
-        let db = null;
-        let auth = null;
-        let currentEditingTabIndex = null;
-        let isFirebaseConnected = false;
-        let unsubscribeFirebase = null;
-        let hasUnsavedChanges = false;
-        let autoSaveEnabled = false; // DESACTIVADO POR DEFECTO
-        let lastSaveTime = null;
+        // DATOS DE LA PÁGINA
+        const tabs = [
+            {
+                id: 'tab-1',
+                name: 'Inicio',
+                icon: 'fas fa-home',
+                active: true,
+                content: [{
+                    type: "shortcuts",
+                    shortcuts: [
+                        {
+                            id: 'sc-1',
+                            name: 'Reserva de Computadoras',
+                            url: 'https://bibliotecareserva.upc.edu.pe/space/130510',
+                            icon: 'fas fa-laptop'
+                        },
+                        {
+                            id: 'sc-2',
+                            name: 'Aula Virtual UPC',
+                            url: 'https://aulavirtual.upc.edu.pe/',
+                            icon: 'fas fa-graduation-cap'
+                        },
+                        {
+                            id: 'sc-3',
+                            name: 'Google',
+                            url: 'https://google.com',
+                            icon: 'fab fa-google'
+                        },
+                        {
+                            id: 'sc-4',
+                            name: 'Drive',
+                            url: 'https://drive.google.com',
+                            icon: 'fab fa-google-drive'
+                        },
+                        {
+                            id: 'sc-5',
+                            name: 'Gmail',
+                            url: 'https://gmail.com',
+                            icon: 'fas fa-envelope'
+                        },
+                        {
+                            id: 'sc-6',
+                            name: 'YouTube',
+                            url: 'https://youtube.com',
+                            icon: 'fab fa-youtube'
+                        },
+                        {
+                            id: 'sc-7',
+                            name: 'Maps',
+                            url: 'https://maps.google.com',
+                            icon: 'fas fa-map'
+                        },
+                        {
+                            id: 'sc-8',
+                            name: 'Traductor',
+                            url: 'https://translate.google.com',
+                            icon: 'fas fa-language'
+                        },
+                        {
+                            id: 'sc-9',
+                            name: 'ChatGPT',
+                            url: 'https://chat.openai.com',
+                            icon: 'fas fa-robot'
+                        }
+                    ]
+                }]
+            }
+        ];
 
         // FUNCIONES DE UTILIDAD
-        function showLoading(message = 'Cargando...') {
-            const loadingMessage = document.getElementById('loadingMessage');
-            if (loadingMessage) {
-                loadingMessage.innerHTML = `<i class="fas fa-spinner fa-spin"></i><br>${message}`;
-            }
-        }
-
-        function hideLoading() {
-            const loadingMessage = document.getElementById('loadingMessage');
-            if (loadingMessage) {
-                loadingMessage.style.display = 'none';
-            }
-            document.getElementById('addTabBtn').style.display = 'flex';
-        }
-
-        function updateFirebaseStatus(message, status = '') {
-            const statusElement = document.getElementById('firebaseStatus');
-            if (statusElement) {
-                statusElement.innerHTML = `<i class="fas fa-cloud"></i> <span>${message}</span>`;
-                statusElement.className = 'firebase-status';
-                if (status) {
-                    statusElement.classList.add(status);
-                }
-            }
-        }
-
         function updateClock() {
             const now = new Date();
             const timeString = now.toLocaleTimeString('es-ES', {
@@ -818,126 +498,12 @@
                 day: 'numeric'
             });
             
-            document.getElementById('clock').innerHTML = `
-                <i class="fas fa-clock"></i> ${timeString} - ${dateString}
-            `;
-        }
-
-        function getDefaultTabs() {
-            return [{
-                id: 'tab-1',
-                name: 'Inicio',
-                icon: 'fas fa-home',
-                active: true,
-                content: [{
-                    type: "shortcuts",
-                    shortcuts: [
-                        {
-                            id: 'sc-1',
-                            name: 'Google',
-                            url: 'https://google.com',
-                            icon: 'fab fa-google'
-                        },
-                        {
-                            id: 'sc-2',
-                            name: 'YouTube',
-                            url: 'https://youtube.com',
-                            icon: 'fab fa-youtube'
-                        },
-                        {
-                            id: 'sc-3',
-                            name: 'Gmail',
-                            url: 'https://gmail.com',
-                            icon: 'fas fa-envelope'
-                        }
-                    ]
-                }]
-            }];
-        }
-
-        // FUNCIONES DE FIREBASE
-        async function signInAnonymously() {
-            try {
-                const userCredential = await auth.signInAnonymously();
-                userId = userCredential.user.uid;
-                console.log('✅ Usuario anónimo conectado:', userId);
-                updateFirebaseStatus('Conectado', 'success');
-                return true;
-            } catch (error) {
-                console.error('❌ Error en autenticación anónima:', error);
-                updateFirebaseStatus('Error de autenticación', 'error');
-                return false;
+            const clockElement = document.getElementById('clock');
+            if (clockElement) {
+                clockElement.innerHTML = `
+                    <i class="fas fa-clock"></i> ${timeString} - ${dateString}
+                `;
             }
-        }
-
-        async function setupFirebaseRealtimeListener() {
-            try {
-                const userDocRef = db.collection('users').doc(userId);
-                
-                unsubscribeFirebase = userDocRef.onSnapshot((doc) => {
-                    if (doc.exists) {
-                        const userData = doc.data();
-                        if (userData.tabs) {
-                            tabs = userData.tabs;
-                            renderTabs();
-                            console.log('✅ Datos cargados desde Firebase');
-                        }
-                    } else {
-                        // Primer uso - crear documento con datos por defecto
-                        tabs = getDefaultTabs();
-                        userDocRef.set({ tabs: tabs });
-                        renderTabs();
-                        console.log('✅ Documento creado con datos por defecto');
-                    }
-                    isFirebaseConnected = true;
-                }, (error) => {
-                    console.error('❌ Error en listener de Firebase:', error);
-                    updateFirebaseStatus('Error de sincronización', 'error');
-                    tabs = getDefaultTabs();
-                    renderTabs();
-                });
-                
-                return true;
-            } catch (error) {
-                console.error('❌ Error configurando listener de Firebase:', error);
-                tabs = getDefaultTabs();
-                renderTabs();
-                return false;
-            }
-        }
-
-        async function saveTabsToFirebase() {
-            if (!isFirebaseConnected || !userId) {
-                console.log('⚠️ Firebase no disponible');
-                return false;
-            }
-
-            try {
-                showSyncStatus('Sincronizando...', 'syncing');
-                await db.collection('users').doc(userId).set({
-                    tabs: tabs,
-                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                showSyncStatus('Sincronizado', 'success');
-                setTimeout(() => hideSyncStatus(), 2000);
-                return true;
-            } catch (error) {
-                console.error('❌ Error guardando en Firebase:', error);
-                showSyncStatus('Error de sincronización', 'error');
-                setTimeout(() => hideSyncStatus(), 3000);
-                return false;
-            }
-        }
-
-        function showSyncStatus(message, status) {
-            const syncStatus = document.getElementById('syncStatus');
-            syncStatus.innerHTML = `<i class="fas fa-sync-alt"></i> <span>${message}</span>`;
-            syncStatus.style.display = 'flex';
-            syncStatus.className = `sync-status ${status}`;
-        }
-
-        function hideSyncStatus() {
-            document.getElementById('syncStatus').style.display = 'none';
         }
 
         // FUNCIONES DE INTERFAZ
@@ -945,31 +511,24 @@
             const tabsList = document.getElementById('tabsList');
             const tabContents = document.getElementById('tabContents');
             
-            if (tabs.length === 0) {
-                tabs = getDefaultTabs();
-            }
-
-            // Limpiar contenido existente
+            if (!tabsList || !tabContents) return;
+            
             tabsList.innerHTML = '';
             tabContents.innerHTML = '';
 
-            // Crear pestañas
             tabs.forEach((tab, index) => {
+                // Crear elemento de pestaña
                 const tabElement = document.createElement('div');
                 tabElement.className = `tab ${tab.active ? 'active' : ''}`;
                 tabElement.innerHTML = `
                     <i class="${tab.icon}"></i>
                     <span>${tab.name}</span>
-                    <div class="tab-actions">
-                        <button class="tab-action-btn edit-tab" data-index="${index}" title="Editar pestaña">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="tab-action-btn delete-tab" data-index="${index}" title="Eliminar pestaña">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
                 `;
-                tabElement.addEventListener('click', () => switchTab(tab.id));
+                
+                tabElement.addEventListener('click', () => {
+                    switchTab(tab.id);
+                });
+                
                 tabsList.appendChild(tabElement);
 
                 // Crear contenido de pestaña
@@ -977,95 +536,25 @@
                 tabContent.className = `tab-content ${tab.active ? 'active' : ''}`;
                 tabContent.id = `content-${tab.id}`;
                 
-                if (tab.content && tab.content[0] && tab.content[0].shortcuts && tab.content[0].shortcuts.length > 0) {
-                    tabContent.innerHTML = `
-                        <div class="shortcuts-grid">
-                            ${tab.content[0].shortcuts.map((shortcut, shortcutIndex) => `
-                                <div class="shortcut" data-shortcut-id="${shortcut.id}">
-                                    <div class="shortcut-actions">
-                                        <button class="edit-shortcut" data-tab-index="${index}" data-shortcut-index="${shortcutIndex}" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="delete-shortcut" data-tab-index="${index}" data-shortcut-index="${shortcutIndex}" title="Eliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                    <div class="shortcut-icon">
-                                        <i class="${shortcut.icon}"></i>
-                                    </div>
-                                    <div class="shortcut-name">${shortcut.name}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                } else {
-                    tabContent.innerHTML = `
-                        <div class="empty-tab-message">
-                            <i class="fas fa-folder-open"></i>
-                            <h3>Esta pestaña está vacía</h3>
-                            <p>Haz clic en "Añadir Contenido" para agregar accesos directos</p>
-                        </div>
-                    `;
+                if (tab.content && tab.content[0]) {
+                    if (tab.content[0].type === "shortcuts" && tab.content[0].shortcuts) {
+                        // Contenido normal con accesos directos
+                        tabContent.innerHTML = `
+                            <div class="shortcuts-grid">
+                                ${tab.content[0].shortcuts.map(shortcut => `
+                                    <a href="${shortcut.url}" target="_blank" class="shortcut" data-shortcut-id="${shortcut.id}" rel="noopener noreferrer">
+                                        <div class="shortcut-icon">
+                                            <i class="${shortcut.icon}"></i>
+                                        </div>
+                                        <div class="shortcut-name">${shortcut.name}</div>
+                                    </a>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
                 }
                 
                 tabContents.appendChild(tabContent);
-            });
-
-            // Añadir event listeners para acciones de pestañas
-            document.querySelectorAll('.edit-tab').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    editTab(parseInt(btn.dataset.index));
-                });
-            });
-
-            document.querySelectorAll('.delete-tab').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    deleteTab(parseInt(btn.dataset.index));
-                });
-            });
-
-            // Añadir event listeners para acciones de shortcuts
-            document.querySelectorAll('.shortcut').forEach(shortcut => {
-                if (!editMode) {
-                    shortcut.addEventListener('click', (e) => {
-                        if (!e.target.closest('.shortcut-actions')) {
-                            const shortcutId = shortcut.dataset.shortcutId;
-                            const activeTab = tabs.find(tab => tab.active);
-                            if (activeTab) {
-                                const shortcutData = activeTab.content[0].shortcuts.find(sc => sc.id === shortcutId);
-                                if (shortcutData) {
-                                    window.open(shortcutData.url, '_blank');
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-
-            document.querySelectorAll('.edit-shortcut').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    openShortcutModal(
-                        parseInt(btn.dataset.tabIndex),
-                        parseInt(btn.dataset.shortcutIndex)
-                    );
-                });
-            });
-
-            document.querySelectorAll('.delete-shortcut').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const tabIndex = parseInt(btn.dataset.tabIndex);
-                    const shortcutIndex = parseInt(btn.dataset.shortcutIndex);
-                    
-                    if (confirm('¿Estás seguro de que quieres eliminar este acceso directo?')) {
-                        tabs[tabIndex].content[0].shortcuts.splice(shortcutIndex, 1);
-                        renderTabs();
-                        markChanges();
-                    }
-                });
             });
         }
 
@@ -1074,361 +563,50 @@
                 tab.active = tab.id === tabId;
             });
             renderTabs();
-            // ELIMINADO: markChanges() - Ya no marca cambios automáticamente
-        }
-
-        function addTab() {
-            const newTab = {
-                id: 'tab-' + Date.now(),
-                name: 'Nueva Pestaña',
-                icon: 'fas fa-folder',
-                active: false,
-                content: [{
-                    type: "shortcuts",
-                    shortcuts: []
-                }]
-            };
-            
-            tabs.push(newTab);
-            renderTabs();
-            markChanges();
-        }
-
-        function editTab(index) {
-            const newName = prompt('Nuevo nombre de la pestaña:', tabs[index].name);
-            if (newName && newName.trim() !== '') {
-                tabs[index].name = newName.trim();
-                renderTabs();
-                markChanges();
-            }
-        }
-
-        function deleteTab(index) {
-            if (tabs.length <= 1) {
-                alert('Debe haber al menos una pestaña');
-                return;
-            }
-            
-            if (confirm('¿Estás seguro de que quieres eliminar esta pestaña? Se perderá todo su contenido.')) {
-                tabs.splice(index, 1);
-                if (tabs.length > 0 && !tabs.some(tab => tab.active)) {
-                    tabs[0].active = true;
-                }
-                renderTabs();
-                markChanges();
-            }
-        }
-
-        function toggleEditMode() {
-            editMode = !editMode;
-            document.body.classList.toggle('edit-mode', editMode);
-            document.getElementById('editModeBtn').innerHTML = editMode ? 
-                '<i class="fas fa-times"></i> Cancelar' : 
-                '<i class="fas fa-edit"></i> Editar';
-        }
-
-        function openShortcutModal(tabIndex, shortcutIndex = null) {
-            currentEditingTabIndex = tabIndex;
-            const modal = document.getElementById('shortcutModal');
-            const form = document.getElementById('shortcutForm');
-            
-            if (shortcutIndex !== null) {
-                // Editar shortcut existente
-                document.getElementById('shortcutModalTitle').textContent = 'Editar Acceso Directo';
-                const shortcut = tabs[tabIndex].content[0].shortcuts[shortcutIndex];
-                document.getElementById('shortcutName').value = shortcut.name;
-                document.getElementById('shortcutUrl').value = shortcut.url;
-                document.getElementById('shortcutIcon').value = shortcut.icon;
-                document.getElementById('editingShortcutIndex').value = shortcutIndex;
-            } else {
-                // Nuevo shortcut
-                document.getElementById('shortcutModalTitle').textContent = 'Añadir Acceso Directo';
-                form.reset();
-                document.getElementById('editingShortcutIndex').value = '';
-            }
-            
-            modal.style.display = 'flex';
-            document.getElementById('shortcutName').focus();
-        }
-
-        function saveShortcut(event) {
-            event.preventDefault();
-            
-            const name = document.getElementById('shortcutName').value;
-            const url = document.getElementById('shortcutUrl').value;
-            const icon = document.getElementById('shortcutIcon').value;
-            const editingIndex = document.getElementById('editingShortcutIndex').value;
-            
-            if (!name || !url) {
-                alert('Por favor, completa todos los campos');
-                return;
-            }
-            
-            let finalUrl = url;
-            if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
-                finalUrl = 'https://' + finalUrl;
-            }
-            
-            const newShortcut = {
-                id: 'sc-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
-                name: name,
-                url: finalUrl,
-                icon: icon || 'fas fa-link'
-            };
-            
-            if (editingIndex !== '') {
-                tabs[currentEditingTabIndex].content[0].shortcuts[editingIndex] = newShortcut;
-            } else {
-                if (!tabs[currentEditingTabIndex].content[0].shortcuts) {
-                    tabs[currentEditingTabIndex].content[0].shortcuts = [];
-                }
-                tabs[currentEditingTabIndex].content[0].shortcuts.push(newShortcut);
-            }
-            
-            document.getElementById('shortcutModal').style.display = 'none';
-            renderTabs();
-            markChanges();
-        }
-
-        function openSettings() {
-            document.getElementById('settingsModal').style.display = 'flex';
-        }
-
-        function applySettings() {
-            const bgSelector = document.getElementById('bgSelector').value;
-            // Aquí puedes añadir lógica para cambiar el fondo
-            document.getElementById('settingsModal').style.display = 'none';
-            alert('Configuración aplicada (funcionalidad en desarrollo)');
-        }
-
-        // FUNCIONES DE GUARDADO MANUAL
-        function setupManualSave() {
-            const saveBtn = document.getElementById('manualSaveBtn');
-            const autoSaveToggle = document.getElementById('autoSaveToggle');
-            
-            saveBtn.addEventListener('click', async () => {
-                await manualSave();
-            });
-            
-            autoSaveToggle.addEventListener('click', () => {
-                autoSaveEnabled = !autoSaveEnabled;
-                updateAutoSaveToggle();
-                
-                // Solo guardar automáticamente si se acaba de activar y hay cambios
-                if (autoSaveEnabled && hasUnsavedChanges) {
-                    autoSave();
-                }
-            });
-            
-            // ELIMINADO: setupChangeDetection() - Ya no hay detección automática de cambios
-        }
-
-        // ELIMINADA: Función setupChangeDetection() completa
-
-        async function manualSave() {
-            const saveBtn = document.getElementById('manualSaveBtn');
-            
-            saveBtn.classList.add('saving');
-            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...<span class="save-pulse"></span>';
-            
-            try {
-                const success = await saveTabsToFirebase();
-                
-                if (success) {
-                    saveBtn.classList.remove('saving');
-                    saveBtn.classList.add('saved');
-                    saveBtn.innerHTML = '<i class="fas fa-check"></i> Guardado';
-                    
-                    hasUnsavedChanges = false;
-                    lastSaveTime = new Date();
-                    updateSaveUI();
-                    
-                    setTimeout(() => {
-                        saveBtn.classList.remove('saved');
-                        updateSaveUI();
-                    }, 2000);
-                } else {
-                    saveBtn.classList.remove('saving');
-                    saveBtn.classList.add('error');
-                    saveBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
-                    
-                    setTimeout(() => {
-                        saveBtn.classList.remove('error');
-                        updateSaveUI();
-                    }, 3000);
-                }
-            } catch (error) {
-                console.error('❌ Error en guardado manual:', error);
-                saveBtn.classList.remove('saving');
-                saveBtn.classList.add('error');
-                saveBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
-                
-                setTimeout(() => {
-                    saveBtn.classList.remove('error');
-                    updateSaveUI();
-                }, 3000);
-            }
-        }
-
-        function autoSave() {
-            // Solo guardar si el auto guardado está activado y hay cambios
-            if (!hasUnsavedChanges || !autoSaveEnabled) return;
-            
-            saveTabsToFirebase().then(success => {
-                if (success) {
-                    hasUnsavedChanges = false;
-                    lastSaveTime = new Date();
-                    updateSaveUI();
-                    console.log('✅ Guardado automático exitoso');
-                }
-            });
-        }
-
-        function updateSaveUI() {
-            const saveBtn = document.getElementById('manualSaveBtn');
-            const lastSavedTimeElement = document.getElementById('lastSavedTime');
-            
-            if (saveBtn) {
-                if (hasUnsavedChanges) {
-                    saveBtn.classList.add('has-changes');
-                    saveBtn.innerHTML = '<i class="fas fa-save"></i> Guardar <span class="changes-indicator"></span>';
-                } else {
-                    saveBtn.classList.remove('has-changes');
-                    saveBtn.innerHTML = '<i class="fas fa-save"></i> Guardar';
-                }
-                
-                saveBtn.title = hasUnsavedChanges ? 
-                    'Tienes cambios sin guardar. Click para guardar manualmente.' : 
-                    'Todos los cambios están guardados.';
-            }
-            
-            if (lastSavedTimeElement) {
-                if (lastSaveTime) {
-                    const now = new Date();
-                    const diffMs = now - lastSaveTime;
-                    const diffMins = Math.floor(diffMs / 60000);
-                    
-                    if (diffMins < 1) {
-                        lastSavedTimeElement.textContent = 'Hace unos segundos';
-                    } else if (diffMins < 60) {
-                        lastSavedTimeElement.textContent = `Hace ${diffMins} minuto${diffMins > 1 ? 's' : ''}`;
-                    } else {
-                        lastSavedTimeElement.textContent = lastSaveTime.toLocaleTimeString('es-ES', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-                    }
-                } else {
-                    lastSavedTimeElement.textContent = 'Nunca';
-                }
-            }
-        }
-
-        function updateAutoSaveToggle() {
-            const toggle = document.getElementById('autoSaveToggle');
-            if (autoSaveEnabled) {
-                toggle.classList.add('auto-save-enabled');
-                toggle.title = 'Guardado automático activado';
-            } else {
-                toggle.classList.remove('auto-save-enabled');
-                toggle.title = 'Guardado automático desactivado';
-            }
-        }
-
-        function markChanges() {
-            if (!hasUnsavedChanges) {
-                hasUnsavedChanges = true;
-                updateSaveUI();
-                
-                // Solo guardar automáticamente si está activado
-                if (autoSaveEnabled) {
-                    autoSave();
-                }
-            }
-        }
-
-        function setupEventListeners() {
-            document.getElementById('addTabBtn').addEventListener('click', addTab);
-            document.getElementById('editModeBtn').addEventListener('click', toggleEditMode);
-            document.getElementById('addShortcutBtn').addEventListener('click', () => {
-                const activeTabIndex = tabs.findIndex(tab => tab.active);
-                if (activeTabIndex !== -1) {
-                    openShortcutModal(activeTabIndex);
-                } else {
-                    alert('Selecciona una pestaña primero');
-                }
-            });
-            document.getElementById('settingsBtn').addEventListener('click', openSettings);
-            
-            document.getElementById('shortcutForm').addEventListener('submit', saveShortcut);
-            document.getElementById('cancelShortcut').addEventListener('click', () => {
-                document.getElementById('shortcutModal').style.display = 'none';
-            });
-            
-            document.getElementById('applySettings').addEventListener('click', applySettings);
-            document.getElementById('cancelSettings').addEventListener('click', () => {
-                document.getElementById('settingsModal').style.display = 'none';
-            });
-            
-            document.querySelectorAll('.close-modal').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    this.closest('.modal').style.display = 'none';
-                });
-            });
-            
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        this.style.display = 'none';
-                    }
-                });
-            });
-            
-            setupManualSave();
-            document.querySelector('.search-input').focus();
         }
 
         // INICIAR APLICACIÓN
-        async function initializeApp() {
-            console.log('🚀 Iniciando aplicación...');
+        function initializeApp() {
+            // Configurar reloj
+            updateClock();
+            setInterval(updateClock, 1000);
             
-            try {
-                showLoading('Inicializando Firebase...');
-                updateFirebaseStatus('Conectando a Firebase...', 'syncing');
-                
-                firebase.initializeApp(firebaseConfig);
-                db = firebase.firestore();
-                auth = firebase.auth();
-                
-                console.log('✅ Firebase inicializado');
-                
-                updateClock();
-                setInterval(updateClock, 1000);
-                
-                await signInAnonymously();
-                await setupFirebaseRealtimeListener();
-                
-                setupEventListeners();
-                updateSaveUI();
-                updateAutoSaveToggle(); // Actualizar interfaz con autoguardado desactivado
-                
-                hideLoading();
-                
-                console.log('✅ Aplicación iniciada correctamente');
-                
-            } catch (error) {
-                console.error('❌ Error inicializando la aplicación:', error);
-                updateFirebaseStatus('Error de conexión', 'error');
-                tabs = getDefaultTabs();
-                renderTabs();
-                setupEventListeners();
-                updateSaveUI();
-                updateAutoSaveToggle();
-                hideLoading();
+            // Renderizar interfaz
+            renderTabs();
+            
+            // Enfocar el campo de búsqueda
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.focus();
+            }
+            
+            // Configurar eventos de búsqueda
+            const voiceSearch = document.getElementById('voiceSearch');
+            const imageSearch = document.getElementById('imageSearch');
+            
+            // Búsqueda por voz (simulación)
+            if (voiceSearch) {
+                voiceSearch.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Función de búsqueda por voz. En un navegador compatible, se activaría el reconocimiento de voz.');
+                });
+            }
+            
+            // Búsqueda por imagen
+            if (imageSearch) {
+                imageSearch.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.open('https://images.google.com/', '_blank', 'noopener,noreferrer');
+                });
             }
         }
 
-        document.addEventListener('DOMContentLoaded', initializeApp);
+        // Iniciar cuando el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
     </script>
 </body>
 </html>

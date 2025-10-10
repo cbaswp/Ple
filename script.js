@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const infoPopup = document.getElementById('info-popup');
     const popupText = document.getElementById('popup-text');
     
-    // *** CAMBIO CLAVE: Seleccionar los botones aquí ***
     const startButton = document.getElementById('start-button');
     const restartButton = document.getElementById('restart-button');
     const popupCloseButton = document.getElementById('popup-close-button');
@@ -22,7 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let highScore = localStorage.getItem('biblioRunnerHighScore') || 0;
     let isJumping = false;
     let isGameOver = true;
-    let gameSpeed = 5;
+    
+    // --- NUEVAS VARIABLES DE DIFICULTAD ---
+    let gameSpeed = 4; // Velocidad inicial más lenta
+    let speedIncrementThreshold = 50; // Aumentar velocidad cada 50 puntos
+    let speedIncrementAmount = 0.5; // Cantidad de aumento de velocidad
+    let lastSpeedIncreaseScore = 0; // Para controlar cuándo aumentar la velocidad
+
     let gameInterval;
     let itemSpawnInterval;
     let obstacleSpawnInterval;
@@ -71,6 +76,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const playerRect = player.getBoundingClientRect();
 
+        // --- LÓGICA DE DIFICULTAD PROGRESIVA ---
+        // Aumentar la velocidad del juego cada vez que se alcanza el umbral de puntos
+        if (score > 0 && score - lastSpeedIncreaseScore >= speedIncrementThreshold) {
+            gameSpeed += speedIncrementAmount;
+            lastSpeedIncreaseScore = score;
+            console.log("¡Dificultad aumentada! Nueva velocidad: " + gameSpeed.toFixed(2));
+        }
+
         const obstacles = document.querySelectorAll('.obstacle');
         obstacles.forEach(obstacle => {
             let obstacleRight = parseInt(window.getComputedStyle(obstacle).getPropertyValue('right'));
@@ -99,7 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 scoreElement.textContent = `Puntos: ${score}`;
                 item.remove();
 
-                if (score % 100 === 0) {
+                // El popup ahora aparece cada 200 puntos para ser menos intrusivo
+                if (score % 200 === 0) {
                     showInfoPopup();
                 }
             }
@@ -125,7 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function startGame() {
         isGameOver = false;
         score = 0;
-        gameSpeed = 5;
+        gameSpeed = 4; // Reiniciar a la velocidad inicial
+        lastSpeedIncreaseScore = 0; // Reiniciar el control de velocidad
         scoreElement.textContent = `Puntos: ${score}`;
         startScreen.classList.add('hidden');
         gameOverScreen.classList.add('hidden');
@@ -154,14 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-       // --- Event Listeners (VERSIÓN MÁS ROBUSTA PARA CHROME) ---
-
-    // Función para manejar tanto clics como toques
+    // --- Event Listeners (Versión robusta para Chrome) ---
     function handleInteraction(element, callback) {
-        // Escuchamos tanto 'click' como 'touchstart'
         element.addEventListener('click', callback);
         element.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Previene que el toque dispare también un 'click' fantasma
+            e.preventDefault();
             callback();
         });
     }
@@ -174,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     handleInteraction(gameContainer, jump);
 
-    // Botones de la UI usando la nueva función
+    // Botones de la UI
     handleInteraction(startButton, startGame);
     handleInteraction(restartButton, startGame);
     
@@ -183,4 +195,3 @@ document.addEventListener('DOMContentLoaded', () => {
         isGameOver = false;
     });
 });
-

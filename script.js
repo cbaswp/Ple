@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const finalScoreElement = document.getElementById('final-score');
     const infoPopup = document.getElementById('info-popup');
     const popupText = document.getElementById('popup-text');
+    
+    // *** CAMBIO CLAVE: Seleccionar los botones aquí ***
+    const startButton = document.getElementById('start-button');
+    const restartButton = document.getElementById('restart-button');
     const popupCloseButton = document.getElementById('popup-close-button');
 
     // --- Variables del Juego ---
@@ -34,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             player.classList.remove('jump');
             isJumping = false;
-        }, 500); // Duración del salto
+        }, 500);
     }
 
     function createObstacle() {
@@ -42,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         obstacle.classList.add('obstacle');
         const types = ['noise', 'food'];
         obstacle.classList.add(types[Math.floor(Math.random() * types.length)]);
-        obstacle.style.right = '-60px'; // Un poco más fuera de pantalla
+        obstacle.style.right = '-60px';
         obstaclesContainer.appendChild(obstacle);
     }
 
@@ -55,8 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
         itemsContainer.appendChild(item);
     }
 
-    // *** NUEVA FUNCIÓN DE DETECCIÓN DE COLISIONES ***
-    // Esta función comprueba si dos rectángulos se superponen.
     function isColliding(rect1, rect2) {
         return !(rect1.right < rect2.left || 
                  rect1.left > rect2.right || 
@@ -69,14 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const playerRect = player.getBoundingClientRect();
 
-        // Mover y comprobar obstáculos
         const obstacles = document.querySelectorAll('.obstacle');
         obstacles.forEach(obstacle => {
             let obstacleRight = parseInt(window.getComputedStyle(obstacle).getPropertyValue('right'));
             obstacleRight += gameSpeed;
             obstacle.style.right = `${obstacleRight}px`;
 
-            // *** LÓGICA DE COLISIÓN CORREGIDA ***
             const obstacleRect = obstacle.getBoundingClientRect();
             if (isColliding(playerRect, obstacleRect)) {
                 endGame();
@@ -87,14 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Mover y comprobar ítems
         const items = document.querySelectorAll('.item');
         items.forEach(item => {
             let itemRight = parseInt(window.getComputedStyle(item).getPropertyValue('right'));
             itemRight += gameSpeed;
             item.style.right = `${itemRight}px`;
 
-            // *** USANDO LA MISMA FUNCIÓN DE COLISIÓN PARA ÍTEMS ***
             const itemRect = item.getBoundingClientRect();
             if (isColliding(playerRect, itemRect)) {
                 score += 10;
@@ -156,22 +154,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Event Listeners ---
+    // --- Event Listeners (CORREGIDOS PARA MÓVIL) ---
+
+    // Controles de salto
     document.addEventListener('keydown', (event) => {
         if (event.code === 'Space' || event.code === 'ArrowUp') {
             jump();
         }
     });
+
     gameContainer.addEventListener('click', jump);
     gameContainer.addEventListener('touchstart', (e) => {
         e.preventDefault();
         jump();
     });
 
-    document.getElementById('start-button').addEventListener('click', startGame);
-    document.getElementById('restart-button').addEventListener('click', startGame);
+    // *** CAMBIO CLAVE: Añadir listeners para 'touchend' en los botones ***
+    // Esto asegura que funcionen tanto en PC como en móviles.
     
+    // Botón de Jugar
+    startButton.addEventListener('click', startGame);
+    startButton.addEventListener('touchend', (e) => {
+        e.preventDefault(); // Previene el "ghost click"
+        startGame();
+    });
+
+    // Botón de Reiniciar
+    restartButton.addEventListener('click', startGame);
+    restartButton.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        startGame();
+    });
+    
+    // Botón de Cerrar Popup
     popupCloseButton.addEventListener('click', () => {
+        infoPopup.classList.add('hidden');
+        isGameOver = false;
+    });
+    popupCloseButton.addEventListener('touchend', (e) => {
+        e.preventDefault();
         infoPopup.classList.add('hidden');
         isGameOver = false;
     });

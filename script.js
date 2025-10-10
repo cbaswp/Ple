@@ -154,7 +154,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Event Listeners (CORREGIDOS PARA MÓVIL) ---
+       // --- Event Listeners (VERSIÓN MÁS ROBUSTA PARA CHROME) ---
+
+    // Función para manejar tanto clics como toques
+    function handleInteraction(element, callback) {
+        // Escuchamos tanto 'click' como 'touchstart'
+        element.addEventListener('click', callback);
+        element.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Previene que el toque dispare también un 'click' fantasma
+            callback();
+        });
+    }
 
     // Controles de salto
     document.addEventListener('keydown', (event) => {
@@ -162,38 +172,15 @@ document.addEventListener('DOMContentLoaded', () => {
             jump();
         }
     });
+    handleInteraction(gameContainer, jump);
 
-    gameContainer.addEventListener('click', jump);
-    gameContainer.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        jump();
-    });
-
-    // *** CAMBIO CLAVE: Añadir listeners para 'touchend' en los botones ***
-    // Esto asegura que funcionen tanto en PC como en móviles.
+    // Botones de la UI usando la nueva función
+    handleInteraction(startButton, startGame);
+    handleInteraction(restartButton, startGame);
     
-    // Botón de Jugar
-    startButton.addEventListener('click', startGame);
-    startButton.addEventListener('touchend', (e) => {
-        e.preventDefault(); // Previene el "ghost click"
-        startGame();
-    });
-
-    // Botón de Reiniciar
-    restartButton.addEventListener('click', startGame);
-    restartButton.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        startGame();
-    });
-    
-    // Botón de Cerrar Popup
-    popupCloseButton.addEventListener('click', () => {
-        infoPopup.classList.add('hidden');
-        isGameOver = false;
-    });
-    popupCloseButton.addEventListener('touchend', (e) => {
-        e.preventDefault();
+    handleInteraction(popupCloseButton, () => {
         infoPopup.classList.add('hidden');
         isGameOver = false;
     });
 });
+

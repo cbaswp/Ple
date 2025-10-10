@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.remove();
 
                 // El popup ahora aparece cada 200 puntos para ser menos intrusivo
-                if (score % 200 === 0) {
+                if (score % 100 === 0) {
                     showInfoPopup();
                 }
             }
@@ -127,10 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function showInfoPopup() {
         isGameOver = true;
         const tips = [
-            "¡Tip! Puedes reservar un cubículo de estudio hasta por 3 horas en línea.",
-            "¡Sabías que! Con tu carnet, tienes acceso a bases de datos de revistas científicas.",
+            "¡Tip! Puedes reservar un cubículo de estudio hasta por 2 horas al día.",
+            "¡Sabías que! Con tu TIU, tienes acceso a bases de datos de revistas científicas.",
             "¡Importante! Recuerda que no se permite comida en las áreas de estudio.",
-            "¿Pregunta! ¿Cuántos días puedes tener un iPad en préstamo? a) 1, b) 3, c) 7. (La respuesta es b)"
+            "¿Pregunta! ¿Cuántos días puedes tener un iPad en préstamo? a) 1, b) 3, c) 7. (La respuesta es a)"
         ];
         popupText.textContent = tips[Math.floor(Math.random() * tips.length)];
         infoPopup.classList.remove('hidden');
@@ -195,3 +195,4 @@ document.addEventListener('DOMContentLoaded', () => {
         isGameOver = false;
     });
 });
+
